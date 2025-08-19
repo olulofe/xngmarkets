@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>xNGX — Portfolio (MVP v1)</title>
+<style>
+  :root{ --green:#008753; --char:#1F1F22; --muted:#64748B; --border:#E2E8F0; --bg:#F6FAF7; --ok:#16A34A; --warn:#DC2626; --amber:#F59E0B; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--char);background:linear-gradient(to bottom,var(--bg),#fff)}
+  .wrap{max-width:1180px;margin:0 auto;padding:24px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .mark{width:36px;height:36px;border-radius:10px;background:var(--green);display:grid;place-items:center}
+  .mark svg{width:20px;height:20px}
+  h1{font-size:22px;margin:0}
+  .sub{color:var(--muted);font-size:12px}
+
+  .topbar{display:flex;align-items:center;gap:12px;margin-top:8px}
+  .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;background:#fff;font-size:12px;color:#334155}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .seg button{padding:6px 10px;border:0;background:#fff;font-weight:700;cursor:pointer}
+  .seg button.active{background:var(--char);color:#fff}
+
+  .overview{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:16px 0}
+  @media(max-width:1100px){.overview{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:700px){.overview{grid-template-columns:repeat(2,1fr)}}
+  .ov{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px}
+  .ov .l{font-size:12px;color:#334155}
+  .ov .v{font-size:20px;font-weight:900}
+  .ov .s{font-size:12px;color:#64748B}
+  .pos{color:#065f46;font-weight:800}
+  .neg{color:#b91c1c;font-weight:800}
+
+  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+  @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px}
+  .card h3{margin:0 0 8px;font-size:14px;color:#334155}
+
+  .chart-head{display:flex;align-items:center;gap:10px;justify-content:space-between}
+  .chart-box{border:1px solid var(--border);border-radius:12px;padding:8px;background:#fff}
+  canvas{width:100%;height:260px;display:block}
+
+  .gauge{height:18px;border-radius:999px;background:#f1f5f9;border:1px solid var(--border);position:relative;overflow:hidden}
+  .gauge .fill{height:100%;background:linear-gradient(90deg,#93C5FD,#22C55E);width:0}
+  .gauge .tick{position:absolute;top:-6px;width:2px;height:30px;background:#e11d48}
+  .legend{display:flex;justify-content:space-between;font-size:11px;color:#334155;margin-top:6px}
+
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
+  .right{text-align:right}
+  .symbol{display:flex;align-items:center;gap:8px}
+  .avatar{width:24px;height:24px;border-radius:6px;display:grid;place-items:center;color:#fff;font-size:12px;font-weight:800}
+  .mini{width:120px;height:36px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer}
+  .btn.primary{background:var(--char);border-color:var(--char);color:#fff;font-weight:800}
+
+  .footer{margin-top:16px;font-size:12px;color:#64748B}
+
+/* === xNGX shared nav === */
+.xnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid #E2E8F0;}
+.xnav-inner{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.xnav .logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:#1F1F22;font-weight:900}
+.xnav .logoMark{width:28px;height:28px;border-radius:8px;background:#008753;display:grid;place-items:center}
+.xnav .logoMark svg{width:16px;height:16px}
+.xnav a{padding:8px 10px;border-radius:10px;text-decoration:none;color:#1F1F22;border:1px solid #E2E8F0;background:#fff}
+.xnav a:hover{background:#F8FAFC}
+.xnav a.primary{background:#1F1F22;border-color:#1F1F22;color:#fff}
+.xnav-spacer{flex:1}
+
+</style>
+<style>
+/* === xNGX hamburger header === */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid #E2E8F0}
+.hdr-in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.hbrand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#1F1F22;font-weight:900}
+.hmark{width:28px;height:28px;border-radius:8px;background:#008753;display:grid;place-items:center}
+.hmark svg{width:16px;height:16px}
+.hbtn{margin-left:auto;border:1px solid #E2E8F0;background:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+.drawer{position:fixed;top:0;right:0;height:100%;width:100%;max-width:320px;background:#fff;border-left:1px solid #E2E8F0;box-shadow:-8px 0 24px rgba(2,6,23,.12);transform:translateX(100%);transition:.2s transform ease;z-index:200}
+.drawer.open{transform:translateX(0)}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #E2E8F0}
+.dl{display:grid;padding:12px}
+.dl a{padding:10px 12px;border:1px solid #E2E8F0;border-radius:10px;text-decoration:none;color:#111827;margin-bottom:8px;background:#fff}
+.dl a.primary{background:#1F1F22;color:#fff;border-color:#1F1F22}
+</style></head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-in">
+    <a href="app.html" class="hbrand">
+      <span class="hmark"><svg viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='2'><path d='M5 5l14 14M19 5L5 19'/></svg></span>
+      <span>xNG<span style='color:#008753'>X</span>.markets</span>
+    </a>
+    <button class="hbtn" id="openMenu">☰</button>
+  </div>
+</div>
+<div id="drawer" class="drawer" aria-hidden="true">
+  <div class="dh"><strong>Menu</strong><button id="closeMenu" class="hbtn">✕</button></div>
+  <div class="dl">
+    <a href="index.html">Home</a>
+    <a href="market.html" class="primary">Market</a>
+    
+    <a href="loans_borrow.html">Borrow</a>
+    <a href="loans_supply.html">Supply</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="profile.html">Profile</a>
+    
+    <a href="https://github.com/olulofe/Whitepaper/blob/eadec63611a0688c24bafaf97747441858481aee/README.md" target="_blank">Whitepaper</a>
+  </div>
+</div>
+
+
+</div>
+
+  <div class="wrap">
+    <div class="brand">
+      <!-- <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 5l14 14M19 5L5 19"/></svg></div> -->
+      <div>
+        <h1>Your Portfolio</h1>
+        <div class="sub">Track holdings, P&L, borrow health and supply rewards — on Hedera</div>
+      </div>
+    </div>
+
+    <div class="topbar">
+      <div class="pill">Currency
+        <div class="seg" style="margin-left:8px">
+          <button id="cNGN" class="active">₦</button>
+          <button id="cUSD">$</button>
+        </div>
+      </div>
+      <div class="pill">Return window
+        <div class="seg" style="margin-left:8px">
+          <button id="w7" class="active">7D</button>
+          <button id="w30">30D</button>
+          <button id="wYTD">YTD</button>
+        </div>
+      </div>
+      <div style="margin-left:auto" class="pill">Benchmark NGX ASI (demo)</div>
+    </div>
+
+    <div class="overview">
+      <div class="ov"><div class="l">Net worth</div><div class="v" id="ovNet">—</div><div class="s" id="ovChange"> </div></div>
+      <div class="ov"><div class="l">Holdings value</div><div class="v" id="ovHold">—</div><div class="s" id="ovHoldPct"> </div></div>
+      <div class="ov"><div class="l">Debt outstanding</div><div class="v" id="ovDebt">—</div><div class="s">Borrow APR 8.5%</div></div>
+      <div class="ov"><div class="l">Net equity</div><div class="v" id="ovEquity">—</div><div class="s">Value minus debt</div></div>
+      <div class="ov"><div class="l">Supply earned</div><div class="v" id="ovEarn">—</div><div class="s" id="ovEarnRate">APY 7.2%</div></div>
+      <div class="ov"><div class="l">Liquidation buffer</div><div class="v" id="ovBuf">—</div><div class="s">Liq at 70% LTV</div></div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="chart-head">
+          <h3>Portfolio performance</h3>
+          <div class="pill" id="retPill">Δ —</div>
+        </div>
+        <div class="chart-box"><canvas id="portChart" width="960" height="260"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Risk & income</h3>
+        <div class="l">Health (LTV)</div>
+        <div class="gauge" style="margin:8px 0 4px"><div id="gfill" class="fill"></div><div id="tickLiq" class="tick"></div></div>
+        <div class="legend"><span>0%</span><span id="ltvNow">LTV —</span><span id="liqAt">Liq 70%</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div class="ov"><div class="l">Debt</div><div class="v" id="boxDebt">—</div><div class="s" id="boxDebtUSD"> </div></div>
+          <div class="ov"><div class="l">Supply</div><div class="v" id="boxSup">—</div><div class="s" id="boxAcc">Accrued —</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn">Repay</button>
+          <button class="btn">Supply more</button>
+          <button class="btn">Withdraw</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h3>Holdings</h3>
+      <table>
+        <thead><tr><th>Asset</th><th>Units</th><th>Price</th><th>Value</th><th>P&L</th><th>Weight</th><th>Trend</th><th class="right">Action</th></tr></thead>
+        <tbody id="holdBody"></tbody>
+      </table>
+    </div>
+
+    <div class="footer">Important — Demo portfolio. Prices and returns are illustrative. Liquidation threshold is 70% LTV. Net worth is holdings minus any outstanding debt. Rewards accrue on supplied USDC‑H when utilization is healthy.</div>
+  </div>
+
+<script>
+// ===== Demo parameters =====
+const FX = 1600 // ₦ per $
+let currency = 'NGN' // 'NGN' | 'USD'
+let win = '7D' // '7D' | '30D' | 'YTD'
+
+// Holdings & mock positions
+const holdings = [
+  { t:'MTNN', name:'MTN Nigeria', color:'#f0b90b', units:520, px:282.45 },
+  { t:'GTCO', name:'GTCO', color:'#0ea5e9', units:1200, px:42.2 },
+  { t:'ZENITHBANK', name:'Zenith Bank', color:'#ef4444', units:800, px:41.5 },
+]
+let debtUSDC = 1450.00
+let supplyUSDC = 5000.00
+let accruedUSDC = 17.32
+
+// ===== Helpers =====
+const $ = s=>document.querySelector(s)
+const fmt = v=> currency==='NGN' ? `₦${(v).toLocaleString(undefined,{maximumFractionDigits:2})}` : `$${(v/FX).toLocaleString(undefined,{maximumFractionDigits:2})}`
+const fmtUSD = v=> `$${v.toLocaleString(undefined,{maximumFractionDigits:2})}`
+
+function genSeries(base, days){
+  let x = base, arr = []
+  for(let i=0;i<days;i++){
+    const drift = 0.0005, vol = 0.02
+    const rand = (Math.random()-0.5)*vol
+    x = Math.max(0.5, x*(1+drift+rand))
+    arr.push(+x.toFixed(2))
+  }
+  return arr
+}
+
+// generate per holding 365d
+const history = {}
+for(const h of holdings){ history[h.t] = genSeries(h.px, 365) }
+
+function daysForWin(){ return win==='7D'?7:win==='30D'?30:200 }
+
+function portfolioSeries(){
+  const n = daysForWin()
+  const out = []
+  for(let i=365-n;i<365;i++){
+    let vNGN = 0
+    for(const h of holdings){ vNGN += history[h.t][i] * h.units }
+    out.push(vNGN)
+  }
+  return out
+}
+
+function retPct(series){ if(series.length<2) return 0; const a=series[0], b=series.at(-1); return (b-a)/a }
+
+// ===== UI painting =====
+function drawChart(){
+  const c = document.getElementById('portChart')
+  const ctx = c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height)
+  const data = portfolioSeries()
+  const min = Math.min(...data), max = Math.max(...data)
+  const pad = 18
+  const w = c.width - pad*2, h = c.height - pad*2
+  ctx.lineWidth = 2; ctx.strokeStyle = '#22c55e'; ctx.beginPath()
+  data.forEach((v,i)=>{
+    const x = pad + (i/(data.length-1))*w
+    const y = pad + (1 - (v-min)/(max-min||1))*h
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y)
+  })
+  ctx.stroke()
+  const r = retPct(data)
+  $('#retPill').textContent = `Δ ${ (r*100).toFixed(2) }% ${win}`
+  $('#retPill').style.color = r>=0? '#065f46':'#b91c1c'
+}
+
+function rebuildHoldings(){
+  const tbody = $('#holdBody')
+  tbody.innerHTML = ''
+  const totalVal = holdings.reduce((s,h)=> s + h.px*h.units, 0)
+  holdings.forEach((h,idx)=>{
+    const val = h.px*h.units
+    const wt = val/totalVal
+    const series = history[h.t].slice(365-daysForWin())
+    const r = retPct(series)
+    const tr = document.createElement('tr')
+    tr.innerHTML = `
+      <td class="symbol"><span class="avatar" style="background:${h.color}">${h.t.substring(0,2)}</span> ${h.name}</td>
+      <td>${h.units.toLocaleString()}</td>
+      <td>${fmt(h.px)}</td>
+      <td>${fmt(val)}</td>
+      <td class="${r>=0?'pos':'neg'}">${(r*100).toFixed(2)}%</td>
+      <td>${(wt*100).toFixed(1)}%</td>
+      <td><canvas class="mini" id="mini${idx}"></canvas></td>
+      <td class="right"><button class="btn primary">Trade</button></td>
+    `
+    tbody.appendChild(tr)
+    drawMini(`#mini${idx}`, series, h.color)
+  })
+}
+
+function drawMini(sel, data, color){
+  const c = document.querySelector(sel); const ctx = c.getContext('2d')
+  const w = c.width = c.clientWidth; const h = c.height = c.clientHeight
+  const min = Math.min(...data), max = Math.max(...data)
+  ctx.clearRect(0,0,w,h); ctx.lineWidth = 2; ctx.strokeStyle = color; ctx.beginPath()
+  data.forEach((v,i)=>{ const x = (i/(data.length-1))*w; const y = (1 - (v-min)/(max-min||1))*h; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y) })
+  ctx.stroke()
+}
+
+function refreshOverview(){
+  const valueNGN = holdings.reduce((s,h)=> s + h.px*h.units, 0)
+  const netWorthNGN = valueNGN - debtUSDC*FX + supplyUSDC*FX + accruedUSDC*FX
+  $('#ovHold').textContent = fmt(valueNGN)
+  $('#ovNet').textContent = fmt(netWorthNGN)
+  $('#ovEquity').textContent = fmt(valueNGN - debtUSDC*FX)
+  $('#ovDebt').textContent = fmt(debtUSDC*FX)
+  $('#ovEarn').textContent = fmt(supplyUSDC*FX + accruedUSDC*FX)
+  $('#ovEarnRate').textContent = `APY 7.2% • Accrued ${fmt(accruedUSDC*FX)}`
+
+  // LTV and buffer
+  const valueUSD = valueNGN/FX
+  const ltv = valueUSD>0 ? debtUSDC/valueUSD : 0
+  const buf = (0.70 - ltv) * 100
+  $('#ovBuf').textContent = buf>=0 ? `${buf.toFixed(2)} pp` : `- ${(Math.abs(buf)).toFixed(2)} pp`
+
+  // health gauge
+  const pct = Math.min(100, Math.max(0, ltv*100))
+  const fill = $('#gfill'); fill.style.width = pct + '%'
+  $('#ltvNow').textContent = `LTV ${(ltv*100).toFixed(2)}%`
+  const liq = $('#tickLiq'); liq.style.left = (70)+'%'
+
+  $('#boxDebt').textContent = fmt(debtUSDC*FX)
+  $('#boxDebtUSD').textContent = `≈ ${fmtUSD(debtUSDC)}`
+  $('#boxSup').textContent = fmt(supplyUSDC*FX)
+  $('#boxAcc').textContent = `Accrued ${fmt(accruedUSDC*FX)}`
+
+  // return pill for overview
+  const ser = portfolioSeries(); const r = retPct(ser)
+  const changeVal = (ser.at(-1) - ser[0])
+  $('#ovChange').textContent = `${r>=0?'+':''}${(r*100).toFixed(2)}% over ${win} (Δ ${fmt(changeVal)})`
+  $('#ovHoldPct').textContent = `${((valueNGN/(valueNGN + supplyUSDC*FX))*100).toFixed(1)}% of net worth`
+}
+
+// ===== Interactions =====
+$('#cNGN').onclick=()=>{ currency='NGN'; $('#cNGN').classList.add('active'); $('#cUSD').classList.remove('active'); refreshOverview(); rebuildHoldings(); drawChart() }
+$('#cUSD').onclick=()=>{ currency='USD'; $('#cUSD').classList.add('active'); $('#cNGN').classList.remove('active'); refreshOverview(); rebuildHoldings(); drawChart() }
+$('#w7').onclick=()=>{ win='7D'; $('#w7').classList.add('active'); $('#w30').classList.remove('active'); $('#wYTD').classList.remove('active'); refreshOverview(); rebuildHoldings(); drawChart() }
+$('#w30').onclick=()=>{ win='30D'; $('#w30').classList.add('active'); $('#w7').classList.remove('active'); $('#wYTD').classList.remove('active'); refreshOverview(); rebuildHoldings(); drawChart() }
+$('#wYTD').onclick=()=>{ win='YTD'; $('#wYTD').classList.add('active'); $('#w7').classList.remove('active'); $('#w30').classList.remove('active'); refreshOverview(); rebuildHoldings(); drawChart() }
+
+// Rewards accrual ticker (demo)
+setInterval(()=>{ accruedUSDC += 0.002; refreshOverview() }, 1500)
+
+function init(){ rebuildHoldings(); drawChart(); refreshOverview() }
+init()
+</script>
+
+<script>
+(function(){
+  var d=document, dr=d.getElementById('drawer');
+  var open=d.getElementById('openMenu'), close=d.getElementById('closeMenu');
+  if(open){ open.onclick=function(){ dr.classList.add('open'); }; }
+  if(close){ close.onclick=function(){ dr.classList.remove('open'); }; }
+  d.addEventListener('keydown', function(e){ if(e.key==='Escape') dr.classList.remove('open'); });
+  dr && dr.addEventListener('click', function(e){ if(e.target===dr) dr.classList.remove('open'); });
+})();
+</script>
+
+</body>
+</html>

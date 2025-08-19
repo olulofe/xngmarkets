@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>xNGX — Start Trading (Checklist + Video + Disclaimer)</title>
+<style>
+:root{--ink:#0f172a;--muted:#64748b;--border:#e2e8f0;--card:#fff;--bg:#f6fbf8;--accent:#008753;--accent-ink:#fff;--ok:#16a34a;--warn:#d97706;--bad:#b91c1c}
+*{box-sizing:border-box}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:linear-gradient(#f8fbfa,#fff);color:var(--ink)}
+.wrap{max-width:980px;margin:0 auto;padding:24px}
+.header{display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:40px;height:40px;border-radius:10px;border:1px solid var(--border);display:grid;place-items:center;background:var(--accent)}
+.mark svg{width:22px;height:22px}
+.word{font-weight:900;letter-spacing:-.2px}
+.word .x{color:var(--accent)}
+.spacer{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-weight:700}
+.btn:hover{background:#f8fafc}
+.btn-primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.small{font-size:12px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 1px 0 rgba(2,6,23,.05)}
+.card-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-body{padding:16px}
+.hidden{display:none!important}
+
+/* Checklist */
+.checklist{display:grid;gap:14px;margin-top:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:16px}
+.step{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px}
+.num{width:28px;height:28px;border-radius:999px;background:#e2e8f0;display:grid;place-items:center;font-weight:800}
+.pill{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:12px}
+.pill.ok{color:#065f46;border-color:#a7f3d0;background:#ecfdf5}
+.pill.warn{color:#ca8a04;border-color:#fde68a;background:#fffbeb}
+.pill.bad{color:#991b1b;border-color:#fecaca;background:#fee2e2}
+.actions{display:flex;gap:8px;align-items:center}
+.footerRow{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+.termsBox{max-height:160px;overflow:auto;border:1px solid var(--border);border-radius:12px;background:#fff;padding:12px;margin-top:8px}
+.termsBox::-webkit-scrollbar{height:10px;width:10px}
+.termsBox::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+
+/* Video card */
+.videoBox{position:relative;padding-top:46%;border-radius:12px;overflow:hidden;border:1px solid var(--border);background: radial-gradient(1200px 400px at -10% -20%, #e6fbf2, transparent 60%), linear-gradient(135deg, #003b24, #0a5f3d 55%, #0b7450);} 
+.videoShade{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.35));mix-blend:multiply}
+.play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:999px;background:rgba(255,255,255,.9);display:grid;place-items:center;box-shadow:0 8px 30px rgba(2,6,23,.25)}
+.play:after{content:"";border-style:solid;border-width:10px 0 10px 16px;border-color:transparent transparent transparent var(--ink);margin-left:2px}
+.vidCaption{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.9);padding:6px 10px;border-radius:10px;font-size:12px;color:#0f172a;font-weight:700} 
+
+/* Toast */
+.toast{position:fixed;bottom:18px;right:18px;background:#111827;color:#fff;padding:12px 14px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,.3);z-index:9;display:none}
+
+/* Footer */
+footer{margin-top:22px;padding:14px 0;border-top:1px solid var(--border);color:#334155}
+
+/* === xNGX hamburger header === */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid #E2E8F0}
+.hdr-in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.hbrand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#1F1F22;font-weight:900}
+.hmark{width:28px;height:28px;border-radius:8px;background:#008753;display:grid;place-items:center}
+.hmark svg{width:16px;height:16px}
+.hbtn{margin-left:auto;border:1px solid #E2E8F0;background:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+.drawer{position:fixed;top:0;right:0;height:100%;width:100%;max-width:320px;background:#fff;border-left:1px solid #E2E8F0;box-shadow:-8px 0 24px rgba(2,6,23,.12);transform:translateX(100%);transition:.2s transform ease;z-index:200}
+.drawer.open{transform:translateX(0)}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #E2E8F0}
+.dl{display:grid;padding:12px}
+.dl a{padding:10px 12px;border:1px solid #E2E8F0;border-radius:10px;text-decoration:none;color:#111827;margin-bottom:8px;background:#fff}
+.dl a.primary{background:#1F1F22;color:#fff;border-color:#1F1F22}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-in">
+    <a href="app.html" class="hbrand">
+      <span class="hmark"><svg viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='2'><path d='M5 5l14 14M19 5L5 19'/></svg></span>
+      <span>xNG<span style='color:#008753'>X</span>.markets</span>
+    </a>
+    <button class="hbtn" id="openMenu">☰</button>
+  </div>
+</div>
+<div id="drawer" class="drawer" aria-hidden="true">
+  <div class="dh"><strong>Menu</strong><button id="closeMenu" class="hbtn">✕</button></div>
+  <div class="dl">
+    <a href="index.html">Home</a>
+    <a href="market.html" class="primary">Market</a>
+    
+    <a href="loans_borrow.html">Borrow</a>
+    <a href="loans_supply.html">Supply</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="profile.html">Profile</a>
+    
+  </div>
+</div>
+
+  <div class="wrap">
+    <div class="header">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+        </div>
+        <div class="word"><span class="x">xNG</span>.markets</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" id="goMarket">Open Market</button>
+    </div>
+
+    <!-- Checklist card -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-head"><strong>Finish these steps to start trading</strong></div>
+      <div class="card-body">
+        <div class="checklist" id="checklist">
+          <!-- Step 1: Accept Terms & Disclosures -->
+          <div class="step" id="stepTerms">
+            <div class="num">1</div>
+            <div style="flex:1">
+              <div><strong>Accept Terms & Disclosures</strong> <span id="termsPill" class="pill warn">Required</span></div>
+              <div class="small">Scroll the summary below and tick the box to continue.</div>
+              <div class="termsBox" id="termsBox">
+  <div class="small"><b>1) Nature of tokens.</b> xNGX tokens reference <b>economic exposure</b> to NGX‑listed equities. They are <b>not shares</b>, do not convey voting rights, meeting attendance, or direct corporate actions. The underlying shares are held off‑chain by a regulated broker for a BVI SPV with CSCS custody.</div>
+  <div class="small" style="margin-top:8px"><b>2) Eligibility & compliance.</b> Access requires successful KYC/AML checks. Additional onboarding with the broker/CSCS ("Level 2") is required only for off‑chain share withdrawal (feature disabled at launch). Availability varies by jurisdiction and may change.</div>
+  <div class="small" style="margin-top:8px"><b>3) Prices, iNAV & dynamic band.</b> Indicative Net Asset Value (iNAV) and the trading band are published via Hedera Consensus Service. Orders must stay inside the band. Stale or missing oracle data may pause trading or switch to a windowed/RFQ flow.</div>
+  <div class="small" style="margin-top:8px"><b>4) Trading windows & primary flows.</b> Primary Mint/Burn executes during NGX market windows through a regulated broker. Submitted requests may be cancelled before broker execution if outside user tolerance; otherwise they execute at venue prices, net of fees.</div>
+  <div class="small" style="margin-top:8px"><b>5) Fees.</b> Venue/brokerage fees apply to primary flows. Platform fees include 0.10% loan origination and 2% on liquidation for borrow positions. Network fees apply on‑chain.</div>
+  <div class="small" style="margin-top:8px"><b>6) Borrowing & liquidation.</b> Loans are over‑collateralised; positions may be liquidated if risk limits are breached. Liquidation occurs during market windows and may incur slippage. Past yield does not guarantee future results.</div>
+  <div class="small" style="margin-top:8px"><b>7) Dividends.</b> When issuers pay cash dividends, proceeds are converted and distributed in USDC‑H on a best‑effort T+1 basis, net of applicable fees/taxes. Timing is not guaranteed.</div>
+  <div class="small" style="margin-top:8px"><b>8) Custody & Proof of Reserves.</b> The broker provides statements; an independent auditor issues attestations comparing CSCS positions with on‑chain supply. Summaries and hashes are published publicly; discrepancies will trigger remediation.</div>
+  <div class="small" style="margin-top:8px"><b>9) Risks.</b> Market, liquidity, execution, currency, technology, oracle, and regulatory risks can lead to losses, delays or trading halts. Tokens may trade at a premium/discount to iNAV. You can lose money.</div>
+  <div class="small" style="margin-top:8px"><b>10) No advice; conflicts.</b> Nothing here is investment, legal or tax advice. xNGX may receive fees. You are responsible for your decisions.</div>
+  <div class="small" style="margin-top:8px"><b>11) Regulatory.</b> The structure is designed to comply with applicable regulations; treatment may vary by jurisdiction and can change. Features may be enabled/disabled to remain compliant.</div>
+</div>
+<label class="small" style="display:flex;gap:8px;align-items:center;margin-top:8px">
+  <input type="checkbox" id="acceptChk" disabled/>
+  I have read and accept the Terms, Risks and Disclosures
+</label>
+            </div>
+          </div>
+
+          <!-- Step 2: KYC -->
+          <div class="step">
+            <div class="num">2</div>
+            <div style="flex:1">
+              <div><strong>Complete KYC</strong> <span id="kycPill" class="pill warn">Not started</span></div>
+              <div class="small">Verify your identity to enable trading, mint/burn, borrow and supply.</div>
+              <div class="actions" style="margin-top:8px">
+                <button class="btn btn-primary" id="startKYC">Start KYC</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Email -->
+          <div class="step" id="emailStep">
+            <div class="num">3</div>
+            <div style="flex:1">
+              <div><strong>Verify email</strong> <span id="emailPill" class="pill warn">Pending</span></div>
+              <div class="small">Update and verify your email from your Profile so we can send receipts and risk alerts.</div>
+              <div class="actions" style="margin-top:8px">
+                <button class="btn" id="goProfile">Go to Profile</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ready state -->
+          <div id="readyRow" class="step hidden">
+            <div class="num">✓</div>
+            <div style="flex:1">
+              <div><strong>You're ready to trade</strong> <span class="pill ok">All checks passed</span></div>
+              <div class="small">You can now place orders, mint/burn, borrow and supply.</div>
+              <div class="footerRow"><button class="btn btn-primary" id="startTrading">Start Trading</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="footerRow"><button class="btn" id="closeChecklist">Close</button></div>
+      </div>
+    </div>
+
+    <!-- Video card -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-head"><strong>See how it works</strong></div>
+      <div class="card-body">
+        <div class="videoBox" id="videoCard">
+  <div class="videoShade"></div>
+  <div class="play" aria-label="Play video"></div>
+  <div class="vidCaption">How xNGX works (2:12)</div>
+</div>
+      </div>
+    </div>
+
+    <footer class="small">
+      <b>Disclaimer:</b> xNGX.markets provides a UI to tokens that reference economic exposure to NGX‑listed equities via a regulated Nigerian broker and a BVI SPV holding shares with CSCS. Tokens are not shares and confer no voting/corporate actions. Execution depends on market hours, liquidity and oracle freshness. Borrowing can be liquidated. Fees apply. Availability varies by jurisdiction. Nothing herein is investment advice; read full Terms, Risk and Disclosures before transacting.
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+// State
+let termsAccepted = false;
+let kycStatus = 'not_started'; // 'not_started' | 'in_review' | 'approved' | 'rejected'
+let emailVerified = false;     // toggled when user returns from Profile (?email=verified)
+const qs = s => document.querySelector(s);
+
+function updateUI(){
+  // terms
+  const tPill = qs('#termsPill');
+  tPill.textContent = termsAccepted ? 'Accepted' : 'Required';
+  tPill.className = 'pill ' + (termsAccepted ? 'ok' : 'warn');
+
+  // kyc
+  const kycPill = qs('#kycPill');
+  if(kycStatus==='not_started'){ kycPill.textContent='Not started'; kycPill.className='pill warn'; }
+  if(kycStatus==='in_review'){ kycPill.textContent='In review';   kycPill.className='pill warn'; }
+  if(kycStatus==='approved'){   kycPill.textContent='Approved';    kycPill.className='pill ok'; }
+  if(kycStatus==='rejected'){   kycPill.textContent='Rejected';    kycPill.className='pill bad'; }
+
+  // email
+  const ePill = qs('#emailPill');
+  ePill.textContent = emailVerified ? 'Verified' : 'Pending';
+  ePill.className = 'pill ' + (emailVerified ? 'ok' : 'warn');
+
+  // ready
+  const ready = (termsAccepted && kycStatus==='approved' && emailVerified);
+  qs('#readyRow').classList.toggle('hidden', !ready);
+  // hide the previous steps if ready
+  qs('#stepTerms').classList.toggle('hidden', ready);
+  qs('#emailStep').classList.toggle('hidden', ready);
+}
+
+// Terms scroll gate: enable checkbox only after scrolled to bottom
+qs('#termsBox').addEventListener('scroll', (e)=>{
+  const el = e.currentTarget;
+  const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 4;
+  qs('#acceptChk').disabled = !atBottom;
+});
+qs('#acceptChk').addEventListener('change', (e)=>{
+  termsAccepted = e.currentTarget.checked;
+  updateUI();
+});
+
+// KYC flow (demo)
+qs('#startKYC').onclick = () => {
+  if(kycStatus==='not_started' || kycStatus==='rejected'){
+    kycStatus='in_review'; updateUI(); toast('KYC submitted. Under review…');
+    setTimeout(()=>{ kycStatus = 'approved'; updateUI(); toast('KYC approved.'); }, 1200);
+  }
+};
+
+// Profile navigation (email verification handled on Profile)
+qs('#goProfile').onclick = ()=>{ window.location.href='profile.html'; };
+
+// Demo: coming back with email verified (?email=verified)
+const params = new URLSearchParams(window.location.search);
+if(params.get('email')==='verified'){ emailVerified = true; }
+
+// Buttons
+qs('#startTrading').onclick = ()=>{ window.location.href='market.html'; };
+qs('#goMarket').onclick = ()=>{ window.location.href='market.html'; };
+qs('#closeChecklist').onclick = () => { qs('.card').style.display='none'; toast('Checklist hidden'); };
+
+function toast(msg){ const t=qs('#toast'); t.textContent=msg; t.style.display='block'; clearTimeout(window._t); window._t=setTimeout(()=>t.style.display='none', 2200); }
+
+const vc = qs('#videoCard'); if(vc){ vc.addEventListener('click', ()=> toast('Play video (coming soon)…')); }
+
+updateUI();
+</script>
+
+<script>
+(function(){
+  var d=document, dr=d.getElementById('drawer');
+  var open=d.getElementById('openMenu'), close=d.getElementById('closeMenu');
+  if(open){ open.onclick=function(){ dr.classList.add('open'); }; }
+  if(close){ close.onclick=function(){ dr.classList.remove('open'); }; }
+  d.addEventListener('keydown', function(e){ if(e.key==='Escape') dr.classList.remove('open'); });
+  dr && dr.addEventListener('click', function(e){ if(e.target===dr) dr.classList.remove('open'); });
+})();
+</script>
+</body>
+</html>

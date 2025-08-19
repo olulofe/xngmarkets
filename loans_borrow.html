@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>xNGX — Borrow & Supply (MVP v4)</title>
+<style>
+  :root{ --green:#008753; --char:#1F1F22; --muted:#64748B; --border:#E2E8F0; --bg:#F5FBF7; --ok:#16A34A; --warn:#DC2626; --amber:#F59E0B; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--char);background:linear-gradient(to bottom,var(--bg),#fff)}
+  .wrap{max-width:1180px;margin:0 auto;padding:24px}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .mark{width:34px;height:34px;border-radius:10px;background:var(--green);display:grid;place-items:center}
+  .mark svg{width:20px;height:20px}
+  h1{font-size:22px;margin:0}
+  .sub{color:var(--muted);font-size:12px}
+  .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;background:#f8fafc;font-size:12px;color:#334155}
+
+  .tabs{display:flex;gap:10px;margin:10px 0 16px}
+  .tab{padding:8px 12px;border:1px solid var(--border);border-radius:999px;background:#fff;cursor:pointer;font-weight:700}
+  .tab.active{background:var(--char);color:#fff}
+
+  .overview{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 16px}
+  @media(max-width:900px){.overview{grid-template-columns:repeat(2,1fr)}}
+  .ov{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px}
+  .ov .l{font-size:12px;color:#334155}
+  .ov .v{font-size:18px;font-weight:900}
+  .ov .s{font-size:12px;color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:16px}
+  @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:0 1px 0 rgba(15,23,42,.04)}
+  .card h3{margin:0 0 10px;font-size:14px;color:#334155}
+  .row{display:flex;gap:10px;align-items:center}
+  .row>label{min-width:160px;color:#334155;font-size:13px}
+  input, select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;font-size:14px}
+  .hint{font-size:12px;color:#334155}
+  .muted{color:var(--muted)}
+  .kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+  .k{border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff}
+  .k .l{font-size:11px;color:#334155}
+  .k .v{font-weight:800}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid var(--char);background:var(--char);color:#fff;cursor:pointer;width:100%;font-weight:800}
+  .btn.secondary{background:#fff;color:#111827;border-color:var(--border)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  .gauge{height:18px;border-radius:999px;background:#f1f5f9;border:1px solid var(--border);position:relative;overflow:hidden}
+  .gauge .fill{height:100%;background:linear-gradient(90deg,#93C5FD,#22C55E);width:0}
+  .gauge .tick{position:absolute;top:-6px;width:2px;height:30px;background:#e11d48}
+  .legend{display:flex;justify-content:space-between;font-size:11px;color:#334155;margin-top:6px}
+  .warn{color:var(--warn);font-weight:800}
+  .ok{color:var(--ok);font-weight:800}
+
+  .side{display:grid;gap:12px}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:8px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
+  .right{text-align:right}
+
+  .footer{margin-top:14px;font-size:12px;color:var(--muted)}
+
+  /* Dropdown actions */
+  .action{position:relative;display:inline-block}
+  .dots{min-width:44px}
+  .menu{position:absolute;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--border);border-radius:12px;min-width:180px;box-shadow:0 12px 24px rgba(2,6,23,.15);display:none;overflow:hidden;z-index:50}
+  .menu.open{display:block}
+  .menu button{width:100%;background:#fff;border:0;padding:10px 12px;text-align:left;cursor:pointer;font-size:14px}
+  .menu button:hover{background:#f8fafc}
+
+/* === xNGX shared nav === */
+.xnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid #E2E8F0;}
+.xnav-inner{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.xnav .logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:#1F1F22;font-weight:900}
+.xnav .logoMark{width:28px;height:28px;border-radius:8px;background:#008753;display:grid;place-items:center}
+.xnav .logoMark svg{width:16px;height:16px}
+.xnav a{padding:8px 10px;border-radius:10px;text-decoration:none;color:#1F1F22;border:1px solid #E2E8F0;background:#fff}
+.xnav a:hover{background:#F8FAFC}
+.xnav a.primary{background:#1F1F22;border-color:#1F1F22;color:#fff}
+.xnav-spacer{flex:1}
+
+</style>
+<style>
+/* === xNGX hamburger header === */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid #E2E8F0}
+.hdr-in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.hbrand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#1F1F22;font-weight:900}
+.hmark{width:28px;height:28px;border-radius:8px;background:#008753;display:grid;place-items:center}
+.hmark svg{width:16px;height:16px}
+.hbtn{margin-left:auto;border:1px solid #E2E8F0;background:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+.drawer{position:fixed;top:0;right:0;height:100%;width:100%;max-width:320px;background:#fff;border-left:1px solid #E2E8F0;box-shadow:-8px 0 24px rgba(2,6,23,.12);transform:translateX(100%);transition:.2s transform ease;z-index:200}
+.drawer.open{transform:translateX(0)}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #E2E8F0}
+.dl{display:grid;padding:12px}
+.dl a{padding:10px 12px;border:1px solid #E2E8F0;border-radius:10px;text-decoration:none;color:#111827;margin-bottom:8px;background:#fff}
+.dl a.primary{background:#1F1F22;color:#fff;border-color:#1F1F22}
+</style></head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-in">
+    <a href="app.html" class="hbrand">
+      <span class="hmark"><svg viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='2'><path d='M5 5l14 14M19 5L5 19'/></svg></span>
+      <div>
+        <div><span>xNG<span style='color:#008753'>X</span>.markets</span></div>
+        <div class="muted" style="font-size: 11px;font-weight: 400;">Nigeria's blue chips, on‑chain</div>
+      </div>
+    </a>
+    <button class="hbtn" id="openMenu">☰</button>
+  </div>
+</div>
+<div id="drawer" class="drawer" aria-hidden="true">
+  <div class="dh"><strong>Menu</strong><button id="closeMenu" class="hbtn">✕</button></div>
+  <div class="dl">
+    <a href="index.html">Home</a>
+    <a href="market.html" class="primary">Market</a>
+    
+    <a href="loans_borrow.html">Borrow</a>
+    <a href="loans_supply.html">Supply</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="profile.html">Profile</a>
+    
+    <a href="https://github.com/olulofe/Whitepaper/blob/eadec63611a0688c24bafaf97747441858481aee/README.md" target="_blank">Whitepaper</a>
+  </div>
+</div>
+
+
+</div>
+
+  <div class="wrap">
+    <div class="brand">
+      <div>
+        <h1>Borrow & Supply</h1>
+        <div class="sub">Borrow <strong>USDC‑H</strong> against xNGX stocks (Max LTV <strong>60%</strong>; Liquidation at <strong>70%</strong>). One‑time venue fee <strong>0.1%</strong>; liquidation fee <strong>2%</strong>.</div>
+      </div>
+      <div style="margin-left:auto" class="pill">Borrow APR <span id="apr">8.5%</span> • Deposit APY <span id="dapy">7.2%</span></div>
+    </div>
+
+    <div class="tabs">
+      <button id="tabBorrow" class="tab active">Borrow</button>
+      <button id="tabSupply" class="tab">Supply</button>
+    </div>
+
+    <!-- ===== Borrow Overview ===== -->
+    <div id="borrowOverview" class="overview">
+      <div class="ov"><div class="l">Total collateral (all xNGX)</div><div class="v" id="ovCollat">—</div><div class="s" id="ovCollatNGN"> </div></div>
+      <div class="ov"><div class="l">Current debt</div><div class="v" id="ovDebt">—</div><div class="s">Outstanding USDC‑H</div></div>
+      <div class="ov"><div class="l">Borrow capacity left</div><div class="v" id="ovCapacity">—</div><div class="s" id="ovCapPct"> </div></div>
+      <div class="ov"><div class="l">Weighted LTV</div><div class="v" id="ovLTV">—</div><div class="s">Liquidation at 70%</div></div>
+    </div>
+
+    <!-- BORROW -->
+    <div id="borrowView" class="grid">
+      <div class="card">
+        <h3>Open a loan</h3>
+        <div class="row">
+          <label>Collateral token</label>
+          <select id="collat"></select>
+        </div>
+        <div class="row" style="margin-top:8px;">
+          <label>Units to lock</label>
+          <input id="units" type="number" min="0" step="1" placeholder="e.g. 200" />
+        </div>
+        <div class="row" style="margin-top:8px;">
+          <label>Borrow amount (USDC‑H)</label>
+          <input id="borrowAmt" type="number" min="0" step="0.01" placeholder="e.g. 1000" />
+        </div>
+        <div class="hint">All your xNGX tokens count as collateral automatically. We lock what’s needed for this loan.</div>
+
+        <div style="margin-top:12px">
+          <div class="gauge"><div id="gfill" class="fill"></div><div id="tickLiq" class="tick"></div><div id="tickMax" class="tick" style="background:#f59e0b"></div></div>
+          <div class="legend"><span>0% LTV</span><span class="warn">70% Liq</span><span class="ok">60% Max</span><span>100%</span></div>
+        </div>
+
+        <div class="kpi">
+          <div class="k"><div class="l">Collateral value</div><div class="v" id="collatVal">—</div><div class="muted" id="collatValNGN"> </div></div>
+          <div class="k"><div class="l">Your LTV</div><div class="v" id="ltv">—</div><div class="muted" id="hf">HF —</div></div>
+          <div class="k"><div class="l">Est. liquidation price</div><div class="v" id="liqPx">—</div><div class="muted" id="liqPxNGN"> </div></div>
+          <div class="k"><div class="l">Borrow capacity remaining</div><div class="v" id="remCap">—</div><div class="muted" id="remCapPct"> </div></div>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button id="borrowBtn" class="btn" disabled>Borrow USDC‑H</button>
+        </div>
+        <div id="warnText" class="hint" style="margin-top:8px"></div>
+      </div>
+
+      <div class="side">
+        <div class="card">
+          <h3>Your loans</h3>
+          <table>
+            <thead><tr><th>Ticker</th><th>Units</th><th>Debt (USDC‑H)</th><th>LTV</th><th>HF</th><th class="right">Actions</th></tr></thead>
+            <tbody id="posBody"><tr><td colspan="6" class="muted">No open positions</td></tr></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>Actions</h3>
+          <div class="hint">Select a position to enable actions.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+            <button id="repayBtn" class="btn secondary" disabled>Repay</button>
+            <button id="closeBtn" class="btn secondary" disabled>Close (repay all)</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>History</h3>
+          <table>
+            <thead><tr><th>When</th><th>Event</th><th class="right">Amount</th></tr></thead>
+            <tbody id="histBodyBorrow"><tr><td colspan="3" class="muted">No activity yet</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Supply Overview ===== -->
+    <div id="supplyOverview" class="overview" style="display:none">
+      <div class="ov"><div class="l">Your supplied</div><div class="v" id="ovSup">—</div><div class="s">In USDC‑H</div></div>
+      <div class="ov"><div class="l">Accrued rewards</div><div class="v" id="ovAcc">—</div><div class="s">Claimable</div></div>
+      <div class="ov"><div class="l">Pool utilization</div><div class="v" id="ovUtil">—</div><div class="s">Borrowed / Supplied</div></div>
+      <div class="ov"><div class="l">Deposit APY</div><div class="v" id="ovAPY">—</div><div class="s">Variable</div></div>
+    </div>
+
+    <!-- SUPPLY -->
+    <div id="supplyView" class="grid" style="display:none">
+      <div class="card">
+        <h3>Supply USDC‑H</h3>
+        <div class="row"><label>Amount (USDC‑H)</label><input id="supplyAmt" type="number" min="0" step="0.01" placeholder="e.g. 5000"/></div>
+        <div class="kpi">
+          <div class="k"><div class="l">Deposit APY</div><div class="v" id="depAPY">7.2%</div><div class="muted">Variable, based on utilization</div></div>
+          <div class="k"><div class="l">Utilization</div><div class="v" id="util2">—</div><div class="muted">Borrowed / Supplied</div></div>
+          <div class="k"><div class="l">Pool supply</div><div class="v" id="poolSup">—</div><div class="muted">USDC‑H</div></div>
+          <div class="k"><div class="l">Pool borrows</div><div class="v" id="poolBor">—</div><div class="muted">USDC‑H</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button id="supplyBtn" class="btn">Supply</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Your supply position</h3>
+        <table>
+          <thead><tr><th>Asset</th><th>Supplied</th><th>Accrued (USDC‑H)</th><th>APY</th><th class="right">Actions</th></tr></thead>
+          <tbody id="supBody"><tr><td colspan="5" class="muted">Nothing supplied yet</td></tr></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>History</h3>
+        <table>
+          <thead><tr><th>When</th><th>Event</th><th class="right">Amount</th></tr></thead>
+          <tbody id="histBodySupply"><tr><td colspan="3" class="muted">No activity yet</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">Important — Illustrative demo. Real borrowing and supplying are subject to market hours, oracle freshness, utilization, and venue risk parameters. Fees: 0.1% origination per loan, 2% on liquidation. Liquidations execute during NGX windows using Band/tolerance rules.</div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="overlay" role="dialog" aria-modal="true" style="position:fixed;inset:0;background:rgba(2,6,23,.35);display:none;align-items:center;justify-content:center;z-index:40">
+    <div class="modal" style="width:96%;max-width:440px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 30px 60px rgba(2,6,23,.25)">
+      <div class="hd" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border)"><div id="mTitle">Confirm</div><button id="mClose" style="border:1px solid var(--border);border-radius:8px;padding:6px 10px;background:#fff;cursor:pointer">✕</button></div>
+      <div class="bd" id="mBody" style="padding:14px;display:grid;gap:10px">—</div>
+      <div class="ft" style="padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px"><button id="mCancel" class="btn secondary">Cancel</button><button id="mOk" class="btn">Confirm</button></div>
+    </div>
+  </div>
+
+<script>
+// ===== Parameters =====
+const FX_NGN_PER_USD = 1600; // demo FX
+const MAX_LTV = 0.60;        // safer max
+const LIQ_LTV = 0.70;        // liquidation threshold
+const ORIG_FEE = 0.001;      // 0.1%
+const LIQ_FEE = 0.02;        // 2%
+const BORROW_APR = 0.085;    // 8.5%
+const DEPOSIT_APY = 0.072;   // 7.2%
+
+// ===== Prices & holdings =====
+const prices = { MTNN: 282.45, GTCO: 42.2, ZENITHBANK: 41.5, SEPLAT: 2850 };
+const holdings = [ {t:'MTNN', units: 520}, {t:'GTCO', units: 1200}, {t:'ZENITHBANK', units: 800} ];
+
+// ===== Pool & user state =====
+let pool = { supply: 250000, borrows: 105000 };
+let positions = []; // borrow positions
+let selectedIndex = -1;
+let supplyPos = { amount: 0, accrued: 0, ts: 0 };
+let historyLog = []; // unified action history
+
+// ===== Utils =====
+const $ = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+const fmtUSD = x=>`$${x.toLocaleString(undefined,{maximumFractionDigits:2})}`;
+const fmtNGN = x=>`₦${x.toLocaleString(undefined,{maximumFractionDigits:2})}`;
+const tsFmt = ts => new Date(ts).toLocaleString();
+
+// ===== Borrow refs =====
+const collatSel = $('#collat'); const unitsInp = $('#units'); const amtInp = $('#borrowAmt');
+const gfill = $('#gfill'); const tickLiq = $('#tickLiq'); const tickMax = $('#tickMax');
+const ltvEl = $('#ltv'); const hfEl = $('#hf'); const cvEl = $('#collatVal'); const cvNGN = $('#collatValNGN');
+const liqPx = $('#liqPx'); const liqPxNGN = $('#liqPxNGN'); const feeUp = $('#feeUp'); const warnText = $('#warnText');
+const borrowBtn = $('#borrowBtn');
+
+// ===== Supply refs =====
+const supplyAmtInp = $('#supplyAmt'); const supplyBtn = $('#supplyBtn');
+const supBody = $('#supBody');
+
+// ===== Tabs =====
+const borrowView = $('#borrowView'); const supplyView = $('#supplyView');
+const borrowOverview = $('#borrowOverview'); const supplyOverview = $('#supplyOverview');
+$('#tabBorrow').onclick=()=>{toggleTab('borrow')};
+$('#tabSupply').onclick=()=>{toggleTab('supply')};
+function toggleTab(which){
+  const b = which==='borrow';
+  borrowView.style.display=b?'grid':'none';
+  supplyView.style.display=b?'none':'grid';
+  borrowOverview.style.display=b?'grid':'none';
+  supplyOverview.style.display=b?'none':'grid';
+  $('#tabBorrow').classList.toggle('active',b);
+  $('#tabSupply').classList.toggle('active',!b);
+}
+
+// ===== Collateral selector =====
+function loadCollat(){ collatSel.innerHTML = holdings.map(h=>`<option value="${h.t}">xNGX-${h.t} • You hold ${h.units} units</option>`).join(''); }
+
+// ===== Derived portfolio metrics =====
+function totalHoldingsUSD(){ return holdings.reduce((sum,h)=> sum + (h.units*(prices[h.t]||0)/FX_NGN_PER_USD), 0); }
+function totalDebt(){ return positions.reduce((s,p)=> s + p.debt, 0); }
+function capacityUSD(){ return Math.max(0, totalHoldingsUSD()*MAX_LTV - totalDebt()); }
+function weightedLTV(){ const coll = totalHoldingsUSD(); if(!coll) return 0; return totalDebt()/coll; }
+
+function updateOverviews(){
+  const coll = totalHoldingsUSD(); const deb = totalDebt(); const cap = capacityUSD(); const used = (deb/(coll*MAX_LTV||1))*100;
+  $('#ovCollat').textContent = fmtUSD(coll); $('#ovCollatNGN').textContent = `≈ ${fmtNGN(coll*FX_NGN_PER_USD)}`;
+  $('#ovDebt').textContent = fmtUSD(deb);
+  $('#ovCapacity').textContent = fmtUSD(cap); $('#ovCapPct').textContent = `${Math.max(0,100-used).toFixed(1)}% allowance left`;
+  $('#ovLTV').textContent = (weightedLTV()*100).toFixed(2)+'%';
+
+  // supply overview
+  $('#ovSup').textContent = fmtUSD(supplyPos.amount);
+  $('#ovAcc').textContent = fmtUSD(supplyPos.accrued);
+  const util = pool.supply>0 ? pool.borrows/pool.supply : 0; $('#ovUtil').textContent = (util*100).toFixed(1)+'%';
+  $('#ovAPY').textContent = (DEPOSIT_APY*100).toFixed(1)+'%';
+}
+
+// ===== Borrow computations =====
+function recompute(){
+  const t = collatSel.value; const px = prices[t]||0; const units = Math.max(0, Number(unitsInp.value||0));
+  const collatValueNGN = units * px; const collatValueUSD = collatValueNGN / FX_NGN_PER_USD;
+  const borrow = Math.max(0, Number(amtInp.value||0));
+  const ltv = collatValueUSD>0 ? borrow / collatValueUSD : 0; // fraction
+  const hf = ltv>0 ? (LIQ_LTV / ltv) : Infinity;
+  const liqPriceUSD = units>0 ? (borrow / (units * LIQ_LTV)) : 0; const liqPriceNGN = liqPriceUSD * FX_NGN_PER_USD;
+
+  // capacity remaining relative to entire portfolio
+  const cap = capacityUSD(); const usedPct = (totalDebt()/(totalHoldingsUSD()*MAX_LTV||1))*100;
+
+  cvEl.textContent = fmtUSD(collatValueUSD); cvNGN.textContent = `≈ ${fmtNGN(collatValueNGN)}`;
+  ltvEl.textContent = (ltv*100).toFixed(2)+"%"; hfEl.textContent = isFinite(hf)? `HF ${(hf).toFixed(2)}` : 'HF —';
+  liqPx.textContent = liqPriceUSD? fmtUSD(liqPriceUSD) : '—'; liqPxNGN.textContent = liqPriceUSD? `≈ ${fmtNGN(liqPriceNGN)}` : '';
+  $('#remCap').textContent = fmtUSD(cap);
+  $('#remCapPct').textContent = `${Math.max(0,100-usedPct).toFixed(1)}% of allowance left overall`;
+
+  const pct = Math.min(100, Math.max(0, ltv*100)); gfill.style.width = pct+'%';
+  tickLiq.style.left = (LIQ_LTV*100)+'%'; tickMax.style.left = (MAX_LTV*100)+'%';
+
+  warnText.textContent = '';
+  let allowed = true;
+  if(ltv >= MAX_LTV){ allowed = false; warnText.textContent = 'LTV exceeds max (60%). Reduce amount or add units.'; }
+  if(borrow > cap){ allowed = false; warnText.textContent = 'Borrow exceeds your remaining portfolio capacity.'; }
+  borrowBtn.disabled = !allowed || borrow<=0 || units<=0;
+}
+
+collatSel.addEventListener('change', recompute); unitsInp.addEventListener('input', recompute); amtInp.addEventListener('input', recompute);
+
+borrowBtn.addEventListener('click', ()=>{
+  const t = collatSel.value; const units = Number(unitsInp.value||0); const borrow = Number(amtInp.value||0);
+  if(!borrow||!units) return;
+  pool.borrows += borrow;
+  const pos = {t, units, debt: borrow, ts: Date.now()};
+  positions.push(pos);
+  logEvent('Borrow opened', `xNGX-${t}`, borrow, 'USDC‑H');
+  renderPositions(); unitsInp.value = ''; amtInp.value = ''; recompute(); updateOverviews(); renderHistory();
+  alert('Loan opened. Origination fee '+fmtUSD(borrow*ORIG_FEE)+' will be deducted on settlement.');
+});
+
+function renderPositions(){
+  const tbody = $('#posBody');
+  if(positions.length===0){ tbody.innerHTML = '<tr><td colspan="6" class="muted">No open positions</td></tr>'; return; }
+  tbody.innerHTML = '';
+  positions.forEach((p,i)=>{
+    const px = prices[p.t]; const cvUSD = (p.units*px)/FX_NGN_PER_USD; const ltv = p.debt/cvUSD; const hf = LIQ_LTV/ltv;
+    const tr = document.createElement('tr'); tr.dataset.index = i;
+    tr.innerHTML = `<td>${p.t}</td><td>${p.units}</td><td>$${p.debt.toFixed(2)}</td><td>${(ltv*100).toFixed(2)}%</td><td>${hf.toFixed(2)}</td>
+      <td class='right'><button data-i='${i}' class='act btn secondary' style='padding:6px 10px;border-radius:8px;font-size:12px'>Select</button></td>`;
+    tbody.appendChild(tr);
+  });
+  $$('#posBody .act').forEach(b=>b.onclick=(e)=>{ selectedIndex = Number(e.currentTarget.getAttribute('data-i')); $('#repayBtn').disabled=false; $('#closeBtn').disabled=false; });
+  updatePoolKPIs();
+}
+
+$('#repayBtn').onclick=()=>{
+  if(selectedIndex<0) return; const p = positions[selectedIndex];
+  openModal('Repay debt', `<div>Position: <b>${p.t}</b></div>
+    <div>Outstanding: <b>${fmtUSD(p.debt)}</b></div>
+    <div><label>Amount (USDC‑H)</label><input id='repayAmt' type='number' min='0' step='0.01' placeholder='e.g. 250' /></div>`, ()=>{
+      const a = Number($('#repayAmt').value||0); if(!a) return;
+      p.debt = Math.max(0, p.debt - a); pool.borrows = Math.max(0, pool.borrows - a);
+      logEvent('Repay', `xNGX-${p.t}`, a, 'USDC‑H');
+      if(p.debt===0){ positions.splice(selectedIndex,1); selectedIndex=-1; $('#repayBtn').disabled=true; $('#closeBtn').disabled=true; }
+      renderPositions(); updateOverviews(); renderHistory(); closeModal();
+  });
+};
+
+$('#closeBtn').onclick=()=>{
+  if(selectedIndex<0) return; const p = positions[selectedIndex];
+  openModal('Close loan', `<div>Repay full debt <b>${fmtUSD(p.debt)}</b> and unlock <b>${p.units}</b> units of xNGX-${p.t}?</div>`, ()=>{
+    pool.borrows = Math.max(0, pool.borrows - p.debt);
+    logEvent('Close loan', `xNGX-${p.t}`, p.debt, 'USDC‑H');
+    positions.splice(selectedIndex,1); selectedIndex=-1; renderPositions(); $('#repayBtn').disabled=true; $('#closeBtn').disabled=true; updateOverviews(); renderHistory(); closeModal();
+  });
+};
+
+// ===== Supply flows =====
+function renderSupply(){
+  if(supplyPos.amount<=0){ supBody.innerHTML = '<tr><td colspan="5" class="muted">Nothing supplied yet</td></tr>'; return; }
+  supBody.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>USDC‑H</td><td>$${supplyPos.amount.toFixed(2)}</td><td id='accCell'>$${supplyPos.accrued.toFixed(4)}</td><td>${(DEPOSIT_APY*100).toFixed(1)}%</td><td class='right'>
+    <div class="action">
+      <button class="btn secondary dots" title="Actions">⋯</button>
+      <div class="menu"><button class="mClaim">Claim rewards</button><button class="mWithdraw">Withdraw</button></div>
+    </div>
+  </td>`;
+  supBody.appendChild(tr);
+  const actBtn = tr.querySelector('.dots'); const menu = tr.querySelector('.menu');
+  actBtn.addEventListener('click',(e)=>{ e.stopPropagation(); document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open')); menu.classList.toggle('open'); });
+  tr.querySelector('.mClaim').onclick=()=>{ menu.classList.remove('open'); claimRewards(); };
+  tr.querySelector('.mWithdraw').onclick=()=>{ menu.classList.remove('open'); withdrawFlow(); };
+}
+
+document.addEventListener('click',()=>{ document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open')); });
+
+supplyBtn.onclick=()=>{
+  const a = Number(supplyAmtInp.value||0); if(!a) return; supplyAmtInp.value='';
+  supplyPos.amount += a; supplyPos.ts = Date.now();
+  pool.supply += a; updatePoolKPIs(); renderSupply(); updateOverviews();
+  logEvent('Supply', 'USDC‑H pool', a, 'USDC‑H'); renderHistory();
+  alert('Supplied to pool. Rewards start accruing immediately.');
+};
+
+function claimRewards(){
+  if(supplyPos.accrued<=0) return; const amt = supplyPos.accrued; supplyPos.accrued = 0; renderSupply(); updateOverviews();
+  logEvent('Claim rewards', 'USDC‑H pool', amt, 'USDC‑H'); renderHistory();
+  openModal('Claim rewards', `<div>You will claim <b>${fmtUSD(amt)}</b> in USDC‑H to your wallet.</div>`, ()=>{ closeModal(); });
+}
+
+function withdrawFlow(){
+  openModal('Withdraw supplied', `<div>Available to withdraw: <b>${fmtUSD(supplyPos.amount)}</b></div>
+    <div><label>Amount (USDC‑H)</label><input id='wdAmt' type='number' min='0' step='0.01' placeholder='e.g. 1000'/></div>`, ()=>{
+      const a = Number($('#wdAmt').value||0); if(!a) return;
+      supplyPos.amount = Math.max(0, supplyPos.amount - a); pool.supply = Math.max(0, pool.supply - a);
+      logEvent('Withdraw', 'USDC‑H pool', a, 'USDC‑H');
+      renderSupply(); updatePoolKPIs(); updateOverviews(); renderHistory(); closeModal();
+  });
+}
+
+// Rewards accrual (demo): per second
+let lastTick = Date.now();
+setInterval(()=>{
+  const now = Date.now(); const dt = (now - lastTick)/1000; lastTick = now;
+  if(supplyPos.amount>0){
+    const yearly = supplyPos.amount * DEPOSIT_APY; // USDC‑H per year
+    const perSecond = yearly / (365*24*3600);
+    supplyPos.accrued += perSecond * dt * 6; // speed up
+    const cell = document.getElementById('accCell'); if(cell) cell.textContent = `$${supplyPos.accrued.toFixed(4)}`;
+    updateOverviews();
+  }
+}, 1000);
+
+// History helpers
+function logEvent(type, context, amount, ccy){
+  historyLog.unshift({ts:Date.now(), type, context, amount, ccy});
+  historyLog = historyLog.slice(0,12);
+}
+function renderHistory(){
+  const rows = historyLog.map(e=>`<tr><td>${tsFmt(e.ts)}</td><td>${e.type} — <span class="muted">${e.context}</span></td><td class='right'>${fmtUSD(e.amount)} ${e.ccy||''}</td></tr>`).join('');
+  const empty = `<tr><td colspan='3' class='muted'>No activity yet</td></tr>`;
+  const b = document.getElementById('histBodyBorrow'); if(b) b.innerHTML = rows||empty;
+  const s = document.getElementById('histBodySupply'); if(s) s.innerHTML = rows||empty;
+}
+
+// Pool KPIs
+function updatePoolKPIs(){
+  const util = pool.supply>0 ? pool.borrows/pool.supply : 0; const utilPct = (util*100).toFixed(1)+'%';
+  document.getElementById('util2').textContent = utilPct; document.getElementById('poolSup').textContent = `$${pool.supply.toLocaleString()}`; document.getElementById('poolBor').textContent = `$${pool.borrows.toLocaleString()}`;
+}
+
+// Modal helpers
+const overlay = document.getElementById('modal');
+function openModal(title, bodyHTML, onOK){
+  document.getElementById('mTitle').textContent = title;
+  document.getElementById('mBody').innerHTML = bodyHTML;
+  overlay.style.display='flex';
+  const ok = document.getElementById('mOk');
+  const cancel = document.getElementById('mCancel');
+  const close = document.getElementById('mClose');
+  const cleanup=()=>{ ok.onclick=null; cancel.onclick=null; close.onclick=null; overlay.style.display='none'; };
+  ok.onclick=()=>{ onOK&&onOK(); };
+  cancel.onclick=cleanup; close.onclick=cleanup;
+}
+function closeModal(){ overlay.style.display='none'; }
+
+// Init
+function init(){
+  document.getElementById('apr').textContent=(BORROW_APR*100).toFixed(1)+'%';
+  document.getElementById('dapy').textContent=(DEPOSIT_APY*100).toFixed(1)+'%';
+  loadCollat(); recompute(); renderPositions(); renderSupply(); updatePoolKPIs(); updateOverviews(); renderHistory();
+}
+init();
+</script>
+
+<script>
+(function(){
+  var d=document, dr=d.getElementById('drawer');
+  var open=d.getElementById('openMenu'), close=d.getElementById('closeMenu');
+  if(open){ open.onclick=function(){ dr.classList.add('open'); }; }
+  if(close){ close.onclick=function(){ dr.classList.remove('open'); }; }
+  d.addEventListener('keydown', function(e){ if(e.key==='Escape') dr.classList.remove('open'); });
+  dr && dr.addEventListener('click', function(e){ if(e.target===dr) dr.classList.remove('open'); });
+})();
+</script>
+
+</body>
+</html>

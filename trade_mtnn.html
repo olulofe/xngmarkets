@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>xNGX‑MTNN — Express Trade MVP</title>
+<style>
+  :root{--bg:#f5fbf7;--ink:#0f172a;--muted:#64748b;--border:#e2e8f0;--primary:#0f172a;--ok:#059669;--warn:#dc2626}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--ink);background:linear-gradient(to bottom,var(--bg),#fff)}
+  .container{max-width:1120px;margin:0 auto;padding:28px 24px}
+  .row{display:grid;grid-template-columns:1fr;gap:18px}
+  @media (min-width:960px){.row-2{grid-template-columns:1fr 1fr}}
+  .card{background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:0 1px 0 rgba(15,23,42,.04)}
+  .card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 10px}
+  .card-body{padding:12px 20px 18px}
+  .header{display:flex;align-items:center;gap:12px}
+  .header h1{margin:0;font-size:22px;font-weight:800;letter-spacing:-.3px}
+  .muted{color:var(--muted);font-size:12px}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:6px 10px;border-radius:999px;background:#f8fafc;color:#334155;border:1px solid var(--border)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#fff;cursor:pointer;text-align:center}
+  .btn:hover{background:#f8fafc}
+  .btn-primary{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 6px 14px rgba(15,23,42,.12)}
+  .input,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);font-size:14px}
+  .grid{display:grid;gap:12px}
+  .line{display:flex;justify-content:space-between;font-size:12px}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .ok{color:var(--ok);font-weight:700}.warn{color:var(--warn);font-weight:700}
+  .tabs{display:flex;gap:8px;overflow-x:auto;padding:16px 20px 0}
+  .tab{padding:10px 14px;border-radius:999px;font-size:14px;border:1px solid var(--border);background:#fff;cursor:pointer}
+  .tab.active{background:#0f172a;color:#fff;border-color:#0f172a}
+  .facts{display:grid;grid-template-columns:1fr;gap:12px}
+  @media (min-width:800px){.facts{grid-template-columns:repeat(4,1fr)}}
+  .fact{border:1px solid var(--border);border-radius:12px;padding:12px}
+  .small{font-size:12px;color:var(--muted)}
+  .info{display:inline-grid;place-items:center;width:16px;height:16px;font-size:10px;border-radius:999px;background:#f1f5f9;color:#334155;margin-left:6px;cursor:help;border:1px solid var(--border)}
+  .orderbook{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .ob-list{border:1px solid var(--border);border-radius:12px;padding:8px;background:#fff}
+  .ob-row{display:grid;grid-template-columns:2fr 1fr;gap:8px;font-size:12px;border-radius:8px;padding:8px 10px;cursor:pointer;border:1px solid var(--border)}
+  .ask{color:#991b1b;background:#fee2e2}.bid{color:#065f46;background:#dcfce7}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  .seg button{padding:6px 10px;font-size:12px;border:0;background:#fff;cursor:pointer}
+  .seg button.active{background:#0f172a;color:#fff}
+  .divider{height:1px;background:#e2e8f0;margin:14px 0}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:100%;max-width:460px;background:#fff;border-left:1px solid var(--border);box-shadow:-8px 0 24px rgba(2,6,23,.08);transform:translateX(100%);transition:.2s transform ease}
+  .drawer.open{transform:translateX(0)}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border)}
+  .chart{width:100%;height:300px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(#ffffff,#f8fafc)}
+  /* Floating Ask bubble */
+  .fab{position:fixed;right:22px;bottom:22px;z-index:50;display:inline-flex;align-items:center;gap:8px;background:#0f172a;color:#fff;border:0;border-radius:999px;padding:12px 16px;box-shadow:0 10px 24px rgba(2,6,23,.18);cursor:pointer}
+  .fab:hover{filter:brightness(1.1)}
+  .chart svg{display:block;width:100%;height:100%;}
+  /* Logo image */
+  .logo-box{width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;overflow:hidden}
+  .logo-img{max-width:100%;max-height:100%;object-fit:contain;padding:4px}
+
+
+/* === xNGX hamburger header === */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid #E2E8F0}
+.hdr-in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.hbrand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#1F1F22;font-weight:900}
+.hmark{width:28px;height:28px;border-radius:8px;background:#008753;display:grid;place-items:center}
+.hmark svg{width:16px;height:16px}
+.hbtn{margin-left:auto;border:1px solid #E2E8F0;background:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+.nav-drawer{position:fixed;top:0;right:0;height:100%;width:100%;max-width:320px;background:#fff;border-left:1px solid #E2E8F0;box-shadow:-8px 0 24px rgba(2,6,23,.12);transform:translateX(100%);transition:.2s transform ease;z-index:200}
+.nav-drawer.open{transform:translateX(0)}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #E2E8F0}
+.dl{display:grid;padding:12px}
+.dl a{padding:10px 12px;border:1px solid #E2E8F0;border-radius:10px;text-decoration:none;color:#111827;margin-bottom:8px;background:#fff}
+.dl a.primary{background:#1F1F22;color:#fff;border-color:#1F1F22}
+
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-in">
+    <a href="app.html" class="hbrand">
+      <span class="hmark"><svg viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='2'><path d='M5 5l14 14M19 5L5 19'/></svg></span>
+      <div>
+        xNG<span style='color:#008753'>X</span>.markets
+        <div class="muted" style="font-size: 11px;font-weight: 400;">Nigeria's blue chips, on‑chain</div>
+      </div>
+    </a>
+    <button class="hbtn" id="openMenu">☰</button>
+  </div>
+</div>
+
+<!-- <div class="hdr-in">
+    <a href="app.html" class="hbrand">
+      <span class="hmark"><svg viewBox='0 0 24 24' fill='none' stroke='#fff' stroke-width='2'><path d='M5 5l14 14M19 5L5 19'/></svg></span>
+      <div>
+        <div><span>xNG<span style='color:#008753'>X</span>.markets</span></div>
+        <div class="muted" style="font-size: 11px;font-weight: 400;">Nigeria's blue chips, on‑chain</div>
+      </div>
+    </a>
+    <button class="hbtn" id="openMenu">☰</button>
+  </div> -->
+
+<div id="nav-drawer" class="nav-drawer" aria-hidden="true">
+  <div class="dh"><strong>Menu</strong><button id="closeMenu" class="hbtn">✕</button></div>
+  <div class="dl">
+    <a href="index.html">Home</a>
+    <a href="market.html" class="primary">Market</a>
+    
+    <a href="loans_borrow.html">Borrow</a>
+    <a href="loans_supply.html">Supply</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="profile.html">Profile</a>
+    
+  </div>
+</div>
+
+  <div class="container">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div class="header">
+        <div class="logo-box">
+          <img class="logo-img" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/MTN_Logo.svg" alt="MTN logo" onerror="this.replaceWith(document.createTextNode('MTN'))"/>
+        </div>
+        <div>
+          <h1>xNGX‑MTNN <span class="muted">(MTN Nigeria)</span></h1>
+          <div class="muted">Simple mode • KYC L1 • On Hedera</div>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <a class="badge" href="#por" style="text-decoration:none;">
+          <!-- shield-check icon -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="m9 12 2 2 4-4"></path></svg>
+          Proof of Reserves
+        </a>
+        <button class="btn" id="watchVideo">▶ Watch trade video (2 min)</button>
+      </div>
+    </div>
+
+    <!-- iNAV / Band Oracle -->
+    <div class="card" style="margin-top:16px;">
+      <div class="card-head">
+        <div class="card-title" style="font-weight:700;color:#334155">Reference — iNAV & Band Oracle</div>
+        <div class="muted">Source: NGX vendor feeds + FX • Band published on‑chain</div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div>
+            <div class="small">iNAV (NGN)</div>
+            <div style="font-size:28px;font-weight:800;">₦<span id="iNAV">282.45</span></div>
+            <div class="small">≈ <span id="iNAVusd">0.1765</span> USDC‑H @ ₦<span id="fx">1600</span>/$</div>
+          </div>
+          <div>
+            <div class="small">Band Oracle</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+              <span class="badge" id="bandBadge">Band ±1.05%</span>
+              <span class="badge" id="allowedRange">Allowed ₦278.21–₦286.69</span>
+              <button class="btn" id="toggleHours">Toggle IN‑/AFTER‑HOURS</button>
+            </div>
+          </div>
+          <div>
+            <div class="small">Est. Best Ask / Bid</div>
+            <div class="mono">Ask: ₦<span id="ask">283.60</span> • Bid: ₦<span id="bid">281.80</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details Tabs (extra spacing and divider before content) -->
+    <div class="card" style="margin-top:16px;">
+      <div class="tabs">
+        <button class="tab active" data-tab="financials">Financials</button>
+        <button class="tab" data-tab="profile">Company Profile</button>
+        <button class="tab" data-tab="news">News</button>
+        <button class="tab" data-tab="dividends">Dividend History</button>
+      </div>
+      <div class="card-body" id="tab-contents">
+        <div class="divider"></div>
+        <div class="tab-pane" data-pane="financials">
+          <div class="facts">
+            <div class="fact"><div class="small">Revenue (TTM)</div><div style="font-weight:600;">₦ 2.1T</div></div>
+            <div class="fact"><div class="small">EBITDA (TTM)</div><div style="font-weight:600;">₦ 900B</div></div>
+            <div class="fact"><div class="small">EPS (TTM)</div><div style="font-weight:600;">₦ 12.40</div></div>
+            <div class="fact"><div class="small">Net Debt</div><div style="font-weight:600;">₦ 450B</div></div>
+          </div>
+          <div class="small" style="margin-top:8px;">Illustrative data. Wire to filings or vendor API.</div>
+        </div>
+        <div class="tab-pane" data-pane="profile" style="display:none;">MTN Nigeria: telecoms; HQ Lagos; FY Dec.</div>
+        <div class="tab-pane" data-pane="news" style="display:none;">News feed placeholder…</div>
+        <div class="tab-pane" data-pane="dividends" style="display:none;">Dividend badge ★★★★☆; T+1 USDC‑H payouts.</div>
+      </div>
+    </div>
+
+    <!-- Trade + Chart + Order Book (chart first, then book) -->
+    <div class="row" style="margin-top:16px;grid-template-columns:1fr 2fr;">
+      <!-- Trade -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Trade <span class="info" title="Market/Limit must be inside the live band. Primary Mint uses user tolerance clamped to the band.">i</span></div>
+          <!-- Removed in-card chat button per request -->
+        </div>
+        <div class="card-body trade-body">
+          <div class="grid">
+            <div>
+              <div class="small" style="margin-bottom:6px;">Trade type</div>
+              <select id="tradeType" class="input">
+                <option>Market Buy</option>
+                <option>Limit Order</option>
+                <option>Primary Mint</option>
+                <option>Primary Burn</option>
+                <option disabled>Claim Shares (Coming Soon)</option>
+              </select>
+            </div>
+
+            <!-- Market Buy -->
+            <div id="marketForm">
+              <div class="small" style="background:#fefce8;border:1px dashed #fde68a;padding:10px 12px;border-radius:10px;">If data is unhealthy, venue flips to RFQ‑only.</div>
+              <div class="small" style="margin-top:10px;">Quantity (tokens)</div>
+              <input id="qtyMarket" class="input" placeholder="e.g., 150"/>
+              <div class="card" style="margin-top:10px;">
+                <div class="card-body" style="padding:10px 12px;">
+                  <div class="line"><span>Est. price</span> <span class="mono">₦<span id="mbPrice">283.60</span></span></div>
+                  <div class="line"><span>Within band?</span> <span id="mbBand" class="ok">Yes</span></div>
+                  <div class="line"><span>Fees</span> <span class="mono">0.20% (USDC‑H)</span></div>
+                </div>
+              </div>
+              <button id="buyNow" class="btn btn-primary" style="width:100%;margin-top:12px;font-weight:700;">Buy Now</button>
+            </div>
+
+            <!-- Limit Order -->
+            <div id="limitForm" style="display:none;">
+              <div class="row" style="gap:12px;">
+                <div>
+                  <div class="small">Side</div>
+                  <div class="seg"><button id="btnBuy" class="active">Buy</button><button id="btnSell">Sell</button></div>
+                </div>
+                <div>
+                  <div class="small">Time in force</div>
+                  <select class="input"><option>Good‑Till‑Cancel</option><option>Immediate‑Or‑Cancel</option><option>Fill‑Or‑Kill</option></select>
+                </div>
+              </div>
+              <div class="row" style="gap:12px;">
+                <div>
+                  <div class="small">Limit price (₦)</div>
+                  <input id="limitPxInput" class="input" placeholder="Enter price"/>
+                  <div class="small" id="limitBandMsg" style="margin-top:6px;">Enter a price</div>
+                </div>
+                <div>
+                  <div class="small">Quantity (tokens)</div>
+                  <input id="limitQty" class="input" placeholder="e.g., 150"/>
+                </div>
+              </div>
+              <button id="placeLimit" class="btn btn-primary" style="width:100%;margin-top:12px;" disabled>Place Limit Buy</button>
+            </div>
+
+            <!-- Primary Mint -->
+            <div id="mintForm" style="display:none;">
+              <div class="small" style="background:#fefce8;border:1px dashed #fde68a;padding:10px 12px;border-radius:10px;">Queued when market closed; cancel allowed before cut‑off. If status shows "Initiated", cancel is disabled.</div>
+              <div class="row" style="gap:12px;">
+                <div><div class="small">Creation units</div><input id="creationUnits" class="input" placeholder="e.g., 2 (200 shares)"/></div>
+                <div><div class="small">Preference</div>
+                  <select id="pref" class="input"><option>Lenient (final VWAP check)</option><option>Strict (trip‑cancel on breach)</option></select>
+                </div>
+              </div>
+              <div style="margin-top:10px;">
+                <div class="small">Tolerance <span class="info" title="Your personal guardrail. Execution must land within your tolerance AND the venue band.">i</span></div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+                  <div class="badge" data-preset="conservative">Conservative</div>
+                  <div class="badge" data-preset="balanced" style="background:#0f172a;color:#fff;border-color:#0f172a;">Balanced</div>
+                  <div class="badge" data-preset="aggressive">Aggressive</div>
+                  <div class="badge" data-preset="opportunistic">Opportunistic</div>
+                  <div class="badge" data-preset="custom">Custom</div>
+                </div>
+                <div class="row" style="gap:12px;margin-top:8px;">
+                  <div><div class="small">Lower (%)</div><input id="tolLower" class="input" value="-2.0"/></div>
+                  <div><div class="small">Upper (%)</div><input id="tolUpper" class="input" value="1.0"/></div>
+                </div>
+                <div class="small" style="margin-top:6px;">Effective (clamped to band): <span class="mono" id="effTol">-0.95% / +0.95%</span> • Band: <span class="mono" id="bandShown">±1.05%</span></div>
+              </div>
+              <div class="row" style="gap:12px;margin-top:12px;">
+                <button id="submitMint" class="btn btn-primary">Submit Mint</button>
+                <button id="cancelMint" class="btn" disabled>Cancel (before cut‑off)</button>
+              </div>
+              <div class="small" id="mintStatus" style="margin-top:8px;">Status: Ready</div>
+            </div>
+
+            <!-- Primary Burn -->
+            <div id="burnForm" style="display:none;">
+              <div class="small" style="background:#fefce8;border:1px dashed #fde68a;padding:10px 12px;border-radius:10px;">If market is closed your burn request is queued; cancel allowed before cut‑off.</div>
+              <div class="small" style="margin-top:8px;">Units to burn (sell underlying and receive USDC‑H)</div>
+              <input id="burnUnits" class="input" placeholder="e.g., 200"/>
+              <div class="small" style="margin-top:6px;">Tokens move to escrow; broker sells on NGX at the next window and we remit USDC‑H net of fees.</div>
+              <button id="redeemBtn" class="btn btn-primary" style="width:100%;margin-top:12px;">Submit Burn for USDC-H</button>
+            </div>
+</div>
+</div>
+</div><!-- Chart + Order Book (chart first) -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Price & Depth</div>
+          <div class="muted">Band <span id="bandHdr">±1.05%</span></div>
+        </div>
+        <div class="card-body">
+          <!-- Inline SVG chart (no external deps) -->
+          <div class="chart">
+            <svg id="priceChart" viewBox="0 0 600 240" width="100%" height="100%" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="grad" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <g id="grid" stroke="#e5e7eb" stroke-width="1"></g>
+              <path id="area" fill="url(#grad)" stroke="none"></path>
+              <path id="line" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
+              <circle id="lastDot" r="4" fill="#10b981" stroke="#065f46" stroke-width="1"/>
+            </svg>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Best quotes under the chart -->
+          <div class="row row-2">
+            <div class="small">Best Ask / Bid</div>
+            <div class="mono">Ask: ₦<span id="ask2">283.60</span> • Bid: ₦<span id="bid2">281.80</span></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Order Book -->
+          <div class="orderbook">
+            <div>
+              <div class="small" style="margin-bottom:6px;">Asks (tap to prefill)</div>
+              <div id="asks" class="ob-list"></div>
+            </div>
+            <div>
+              <div class="small" style="margin-bottom:6px;">Bids</div>
+              <div id="bids" class="ob-list"></div>
+            </div>
+          </div>
+          <div class="small" style="margin-top:8px;">If oracle unhealthy → RFQ‑only.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Website‑style disclaimer -->
+    <div class="small" style="margin-top:16px;line-height:1.7">
+      <strong>Important Information</strong> — xNGX.markets provides a digital interface to trade on‑chain tokens that represent interests in NGX‑listed equities held by a regulated broker through a dedicated SPV. These tokens are on‑chain claims on underlying assets and are not themselves shares. Prices shown (including iNAV and band) are indicative; execution prices may differ. Trading involves risk, including possible loss of capital. Primary mint and redemption windows are subject to market hours, broker cut‑offs, liquidity conditions, oracle health, and compliance checks. Corporate actions and regulatory changes may affect token availability and settlement timelines. Dividend distributions, where applicable, are credited in USDC‑H after issuer payment and any required withholding. Nothing on this site constitutes investment advice, an offer, or a solicitation to buy or sell securities. Users should ensure they meet all applicable eligibility and KYC/AML requirements and review the full Terms & Disclosures before transacting.
+    </div>
+  </div>
+
+  <!-- LLM drawer -->
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div class="font-semibold">Ask about MTNN</div>
+      <button id="closeDrawer" class="btn" style="padding:6px 10px;">✕</button>
+    </div>
+    <div style="padding:14px;">
+      <div class="small" style="margin-bottom:8px;">Choose a quick question or type your own to help make an informed decision.</div>
+      <div style="display:grid;gap:6px;">
+        <button class="btn">Is xNGX‑MTNN a good buy right now?</button>
+        <button class="btn">What are the dividend trends and payout reliability?</button>
+        <button class="btn">Key risks for MTNN over the next 12 months?</button>
+        <button class="btn">Compare MTNN vs AIRTEL Africa on growth & margins</button>
+      </div>
+      <div style="margin-top:12px;display:grid;gap:8px;">
+        <input class="input" placeholder="Ask anything about MTNN…"/>
+        <button class="btn btn-primary">Ask</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Ask bubble -->
+  <button id="fabAsk" class="fab" aria-label="Ask about MTNN">💬 Ask about MTNN</button>
+
+<script>
+/**********************
+ * Page/UI logic
+ **********************/
+let bandPct = 0.0105; // ±1.05%
+let safety = 0.0010;  // 0.10%
+let iNAV = 282.45;    // ₦
+let fx = 1600;        // ₦/USDC‑H
+let bestAsk = 283.60, bestBid = 281.80;
+
+const qs  = (sel) => document.querySelector(sel);
+const qsa = (sel) => Array.from(document.querySelectorAll(sel));
+
+function refreshHeader(){
+  qs('#iNAV').textContent = iNAV.toFixed(2);
+  qs('#iNAVusd').textContent = (iNAV/fx).toFixed(4);
+  qs('#fx').textContent = fx.toLocaleString();
+  qs('#ask').textContent = bestAsk.toFixed(2);
+  qs('#bid').textContent = bestBid.toFixed(2);
+  qs('#ask2').textContent = bestAsk.toFixed(2);
+  qs('#bid2').textContent = bestBid.toFixed(2);
+  qs('#bandBadge').textContent = `Band ±${(bandPct*100).toFixed(2)}%`;
+  const low = (iNAV*(1-bandPct)).toFixed(2), up = (iNAV*(1+bandPct)).toFixed(2);
+  qs('#allowedRange').textContent = `Allowed ₦${low}–₦${up}`;
+  qs('#bandHdr').textContent = `±${(bandPct*100).toFixed(2)}%`;
+}
+
+// Tabs
+qsa('.tab').forEach(t=>t.addEventListener('click',()=>{
+  qsa('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  const pane = t.dataset.tab;
+  qsa('.tab-pane').forEach(p=>p.style.display = (p.dataset.pane===pane?'block':'none'));
+}));
+
+// Toggle hours (widens band in demo)
+qs('#toggleHours').addEventListener('click', ()=>{
+  bandPct = bandPct < 0.012 ? 0.015 : 0.0105; // toggle
+  refreshHeader(); refreshBandChecks(); refreshEffTolerance();
+});
+
+// ==== Chart (inline SVG, self-contained) ====
+function drawGrid(svg){
+  const g = svg.querySelector('#grid'); g.innerHTML='';
+  const W = svg.viewBox.baseVal.width, H = svg.viewBox.baseVal.height;
+  for(let x=0;x<=W;x+=100){
+    const v = document.createElementNS('http://www.w3.org/2000/svg','line');
+    v.setAttribute('x1',x);v.setAttribute('y1',0);v.setAttribute('x2',x);v.setAttribute('y2',H);g.appendChild(v);
+  }
+  for(let y=0;y<=H;y+=60){
+    const h = document.createElementNS('http://www.w3.org/2000/svg','line');
+    h.setAttribute('x1',0);h.setAttribute('y1',y);h.setAttribute('x2',W);h.setAttribute('y2',y);g.appendChild(h);
+  }
+}
+function genData(n=80){
+  // simple smooth series around iNAV with small drift
+  const out=[]; let v=iNAV, drift=0.04; const noise=0.8;
+  for(let i=0;i<n;i++){ v += (Math.sin(i/7)*drift) + (Math.random()-0.5)*noise; out.push(v); }
+  return out;
+}
+function drawSeries(svg, data){
+  const W = svg.viewBox.baseVal.width, H = svg.viewBox.baseVal.height;
+  const min = Math.min(...data), max = Math.max(...data);
+  const X = i => (i/(data.length-1))*W;
+  const Y = v => H - ((v-min)/(max-min+1e-6))*H;
+  // line path
+  let d='';
+  data.forEach((v,i)=>{ d += (i? 'L':'M') + X(i) + ',' + Y(v) + ' '; });
+  svg.querySelector('#line').setAttribute('d', d.trim());
+  // area path
+  const area = d + `L ${W},${H} L 0,${H} Z`;
+  svg.querySelector('#area').setAttribute('d', area);
+  // last dot
+  svg.querySelector('#lastDot').setAttribute('cx', X(data.length-1));
+  svg.querySelector('#lastDot').setAttribute('cy', Y(data[data.length-1]));
+}
+(function initChart(){
+  const svg = document.getElementById('priceChart');
+  drawGrid(svg); const data = genData(90); drawSeries(svg, data);
+})();
+
+// ==== Order book ====
+function renderOB(){
+  const asks = [[283.60,300],[283.50,220],[283.40,160]];
+  const bids = [[281.80,320],[281.60,260],[281.40,180]];
+  const mk = (side, [px,sz])=>{
+    const d = document.createElement('div');
+    d.className = 'ob-row ' + (side==='ask'?'ask':'bid');
+    d.innerHTML = `<div class=\"mono\">₦${px.toFixed(2)}</div><div class=\"mono\" style=\"text-align:right;\">${sz}</div>`;
+    d.addEventListener('click', ()=>{
+      qs('#tradeType').value='Limit Order'; switchForm('Limit Order');
+      qs('#limitPxInput').value = px.toFixed(2);
+      refreshBandChecks();
+      window.scrollTo({top: qs('#limitForm').getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth'});
+    });
+    return d;
+  };
+  const A = qs('#asks'); A.innerHTML=''; asks.forEach(r=>A.appendChild(mk('ask', r)));
+  const B = qs('#bids'); B.innerHTML=''; bids.forEach(r=>B.appendChild(mk('bid', r)));
+}
+renderOB();
+
+// ==== Trade forms ====
+const marketForm = qs('#marketForm'), limitForm = qs('#limitForm'), mintForm = qs('#mintForm'), burnForm = qs('#burnForm');
+qs('#tradeType').addEventListener('change', e=>switchForm(e.target.value));
+function switchForm(type){
+  marketForm.style.display = (type==='Market Buy')?'block':'none';
+  limitForm.style.display  = (type==='Limit Order')?'block':'none';
+  mintForm.style.display   = (type==='Primary Mint')?'block':'none';
+  burnForm.style.display   = (type==='Primary Burn')?'block':'none';
+  refreshBandChecks();
+}
+
+// ==== Band checks ====
+function refreshBandChecks(){
+  const lower = iNAV*(1-bandPct), upper = iNAV*(1+bandPct);
+  const inBand = (bestAsk>=lower && bestAsk<=upper);
+  qs('#mbBand').textContent = inBand?'Yes':'No';
+  qs('#mbBand').className = inBand?'ok':'warn';
+
+  const pxStr = (qs('#limitPxInput').value||'').trim();
+  if(pxStr){
+    const px = Number(pxStr);
+    const ok = (px>=lower && px<=upper);
+    qs('#limitBandMsg').textContent = ok?`Inside band (₦${lower.toFixed(2)}–₦${upper.toFixed(2)})`:`Outside band (₦${lower.toFixed(2)}–₦${upper.toFixed(2)})`;
+    qs('#limitBandMsg').className = 'small ' + (ok?'ok':'warn');
+    qs('#placeLimit').disabled = !(ok && qs('#limitQty').value.trim());
+  } else {
+    qs('#limitBandMsg').textContent = 'Enter a price';
+    qs('#limitBandMsg').className = 'small';
+    qs('#placeLimit').disabled = true;
+  }
+}
+qs('#limitPxInput').addEventListener('input', refreshBandChecks);
+qs('#limitQty').addEventListener('input', refreshBandChecks);
+
+// Limit side visual
+let limitSide='Buy';
+qs('#btnBuy').addEventListener('click',()=>{limitSide='Buy';qs('#btnBuy').classList.add('active');qs('#btnSell').classList.remove('active');qs('#placeLimit').textContent='Place Limit Buy';});
+qs('#btnSell').addEventListener('click',()=>{limitSide='Sell';qs('#btnSell').classList.add('active');qs('#btnBuy').classList.remove('active');qs('#placeLimit').textContent='Place Limit Sell';});
+
+// ==== Tolerance helpers (Primary Mint) ====
+function presetsFromBand(B){
+  return {
+    conservative: { lower: -0.30*B, upper: +0.15*B },
+    balanced:     { lower: -0.60*B, upper: +0.30*B },
+    aggressive:   { lower: -0.90*B, upper: +0.45*B },
+    opportunistic:{ lower: Math.min(-0.05, -1.20*B), upper: Math.min(+0.025, +0.60*B) }
+  };
+}
+function clampTol(userLowerPct, userUpperPct, B, safety){
+  const effLower = Math.max(userLowerPct, -B + safety);
+  const effUpper = Math.min(userUpperPct,  B - safety);
+  return { effLower, effUpper };
+}
+function setPreset(name){
+  qsa('[data-preset]').forEach(c=>{ c.style.background=''; c.style.color=''; c.style.borderColor=''; });
+  const chip = document.querySelector(`[data-preset="${name}"]`);
+  if(chip){ chip.style.background = '#0f172a'; chip.style.color='#fff'; chip.style.borderColor='#0f172a'; }
+  const p = presetsFromBand(bandPct)[name] || presetsFromBand(bandPct).balanced;
+  qs('#tolLower').value = (p.lower*100).toFixed(2);
+  qs('#tolUpper').value = (p.upper*100).toFixed(2);
+  refreshEffTolerance();
+}
+qsa('[data-preset]').forEach(c=>c.addEventListener('click',()=>setPreset(c.dataset.preset)));
+['#tolLower','#tolUpper'].forEach(id=>qs(id).addEventListener('input', refreshEffTolerance));
+function refreshEffTolerance(){
+  const lowerPct = Number(qs('#tolLower').value)/100;
+  const upperPct = Number(qs('#tolUpper').value)/100;
+  const {effLower, effUpper} = clampTol(lowerPct, upperPct, bandPct, safety);
+  qs('#effTol').textContent = `${(effLower*100).toFixed(2)}% / +${(effUpper*100).toFixed(2)}%`;
+  qs('#bandShown').textContent = `±${(bandPct*100).toFixed(2)}%`;
+}
+setPreset('balanced');
+
+// ==== Mint lifecycle demo ====
+let mintStatus = 'READY';
+qs('#submitMint').addEventListener('click',()=>{
+  if(bandPct > 0.012){ // pretend after-hours
+    mintStatus='QUEUED';
+    qs('#cancelMint').disabled=false;
+    qs('#mintStatus').textContent='Status: Queued for next window (cancel allowed before cut‑off)';
+  } else {
+    mintStatus='INITIATED';
+    qs('#cancelMint').disabled=true;
+    qs('#mintStatus').textContent='Status: Initiated (cancel disabled) — broker executing';
+  }
+});
+qs('#cancelMint').addEventListener('click',()=>{
+  if(mintStatus==='QUEUED'){
+    mintStatus='READY';
+    qs('#cancelMint').disabled=true;
+    qs('#mintStatus').textContent='Status: Cancelled and escrow released';
+  }
+});
+
+// Drawer triggers
+qs('#fabAsk').addEventListener('click',()=>document.getElementById('drawer').classList.add('open'));
+qs('#closeDrawer').addEventListener('click',()=>document.getElementById('drawer').classList.remove('open'));
+qs('#watchVideo').addEventListener('click', ()=>alert('Play 2‑min video…'));
+
+// Init
+refreshHeader(); refreshBandChecks(); refreshEffTolerance();
+
+// Hamburger menu
+(function(){
+  var d=document, navDrawer=d.getElementById('nav-drawer');
+  var open=d.getElementById('openMenu'), close=d.getElementById('closeMenu');
+  if(open){ open.onclick=function(){ navDrawer.classList.add('open'); }; }
+  if(close){ close.onclick=function(){ navDrawer.classList.remove('open'); }; }
+  d.addEventListener('keydown', function(e){ if(e.key==='Escape') navDrawer.classList.remove('open'); });
+  navDrawer && navDrawer.addEventListener('click', function(e){ if(e.target===navDrawer) navDrawer.classList.remove('open'); });
+  
+  // LLM drawer functionality
+  var llmDrawer=d.getElementById('drawer');
+  var fabAsk=d.getElementById('fabAsk'), closeDrawer=d.getElementById('closeDrawer');
+  if(fabAsk){ fabAsk.onclick=function(){ llmDrawer.classList.add('open'); }; }
+  if(closeDrawer){ closeDrawer.onclick=function(){ llmDrawer.classList.remove('open'); }; }
+})();
+</script>
+</body>
+</html>
