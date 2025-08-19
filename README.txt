@@ -1,3 +1,3 @@
 
-xNG.market
+xNG.markets
 ===============
