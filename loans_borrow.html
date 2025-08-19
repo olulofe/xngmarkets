@@ -129,7 +129,7 @@
     <div class="brand">
       <div>
         <h1>Borrow & Supply</h1>
-        <div class="sub">Borrow <strong>USDC‑H</strong> against xNGX stocks (Max LTV <strong>60%</strong>; Liquidation at <strong>70%</strong>). One‑time venue fee <strong>0.1%</strong>; liquidation fee <strong>2%</strong>.</div>
+        <div class="sub">Borrow <strong>USDC</strong> against xNGX stocks (Max LTV <strong>60%</strong>; Liquidation at <strong>70%</strong>). One‑time venue fee <strong>0.1%</strong>; liquidation fee <strong>2%</strong>.</div>
       </div>
       <div style="margin-left:auto" class="pill">Borrow APR <span id="apr">8.5%</span> • Deposit APY <span id="dapy">7.2%</span></div>
     </div>
@@ -142,7 +142,7 @@
     <!-- ===== Borrow Overview ===== -->
     <div id="borrowOverview" class="overview">
       <div class="ov"><div class="l">Total collateral (all xNGX)</div><div class="v" id="ovCollat">—</div><div class="s" id="ovCollatNGN"> </div></div>
-      <div class="ov"><div class="l">Current debt</div><div class="v" id="ovDebt">—</div><div class="s">Outstanding USDC‑H</div></div>
+      <div class="ov"><div class="l">Current debt</div><div class="v" id="ovDebt">—</div><div class="s">Outstanding USDC</div></div>
       <div class="ov"><div class="l">Borrow capacity left</div><div class="v" id="ovCapacity">—</div><div class="s" id="ovCapPct"> </div></div>
       <div class="ov"><div class="l">Weighted LTV</div><div class="v" id="ovLTV">—</div><div class="s">Liquidation at 70%</div></div>
     </div>
@@ -160,7 +160,7 @@
           <input id="units" type="number" min="0" step="1" placeholder="e.g. 200" />
         </div>
         <div class="row" style="margin-top:8px;">
-          <label>Borrow amount (USDC‑H)</label>
+          <label>Borrow amount (USDC)</label>
           <input id="borrowAmt" type="number" min="0" step="0.01" placeholder="e.g. 1000" />
         </div>
         <div class="hint">All your xNGX tokens count as collateral automatically. We lock what’s needed for this loan.</div>
@@ -178,7 +178,7 @@
         </div>
 
         <div style="margin-top:12px;display:flex;gap:8px">
-          <button id="borrowBtn" class="btn" disabled>Borrow USDC‑H</button>
+          <button id="borrowBtn" class="btn" disabled>Borrow USDC</button>
         </div>
         <div id="warnText" class="hint" style="margin-top:8px"></div>
       </div>
@@ -187,7 +187,7 @@
         <div class="card">
           <h3>Your loans</h3>
           <table>
-            <thead><tr><th>Ticker</th><th>Units</th><th>Debt (USDC‑H)</th><th>LTV</th><th>HF</th><th class="right">Actions</th></tr></thead>
+            <thead><tr><th>Ticker</th><th>Units</th><th>Debt (USDC)</th><th>LTV</th><th>HF</th><th class="right">Actions</th></tr></thead>
             <tbody id="posBody"><tr><td colspan="6" class="muted">No open positions</td></tr></tbody>
           </table>
         </div>
@@ -211,7 +211,7 @@
 
     <!-- ===== Supply Overview ===== -->
     <div id="supplyOverview" class="overview" style="display:none">
-      <div class="ov"><div class="l">Your supplied</div><div class="v" id="ovSup">—</div><div class="s">In USDC‑H</div></div>
+      <div class="ov"><div class="l">Your supplied</div><div class="v" id="ovSup">—</div><div class="s">In USDC</div></div>
       <div class="ov"><div class="l">Accrued rewards</div><div class="v" id="ovAcc">—</div><div class="s">Claimable</div></div>
       <div class="ov"><div class="l">Pool utilization</div><div class="v" id="ovUtil">—</div><div class="s">Borrowed / Supplied</div></div>
       <div class="ov"><div class="l">Deposit APY</div><div class="v" id="ovAPY">—</div><div class="s">Variable</div></div>
@@ -220,13 +220,13 @@
     <!-- SUPPLY -->
     <div id="supplyView" class="grid" style="display:none">
       <div class="card">
-        <h3>Supply USDC‑H</h3>
-        <div class="row"><label>Amount (USDC‑H)</label><input id="supplyAmt" type="number" min="0" step="0.01" placeholder="e.g. 5000"/></div>
+        <h3>Supply USDC</h3>
+        <div class="row"><label>Amount (USDC)</label><input id="supplyAmt" type="number" min="0" step="0.01" placeholder="e.g. 5000"/></div>
         <div class="kpi">
           <div class="k"><div class="l">Deposit APY</div><div class="v" id="depAPY">7.2%</div><div class="muted">Variable, based on utilization</div></div>
           <div class="k"><div class="l">Utilization</div><div class="v" id="util2">—</div><div class="muted">Borrowed / Supplied</div></div>
-          <div class="k"><div class="l">Pool supply</div><div class="v" id="poolSup">—</div><div class="muted">USDC‑H</div></div>
-          <div class="k"><div class="l">Pool borrows</div><div class="v" id="poolBor">—</div><div class="muted">USDC‑H</div></div>
+          <div class="k"><div class="l">Pool supply</div><div class="v" id="poolSup">—</div><div class="muted">USDC</div></div>
+          <div class="k"><div class="l">Pool borrows</div><div class="v" id="poolBor">—</div><div class="muted">USDC</div></div>
         </div>
         <div style="display:flex;gap:8px;margin-top:12px">
           <button id="supplyBtn" class="btn">Supply</button>
@@ -235,7 +235,7 @@
       <div class="card">
         <h3>Your supply position</h3>
         <table>
-          <thead><tr><th>Asset</th><th>Supplied</th><th>Accrued (USDC‑H)</th><th>APY</th><th class="right">Actions</th></tr></thead>
+          <thead><tr><th>Asset</th><th>Supplied</th><th>Accrued (USDC)</th><th>APY</th><th class="right">Actions</th></tr></thead>
           <tbody id="supBody"><tr><td colspan="5" class="muted">Nothing supplied yet</td></tr></tbody>
         </table>
       </div>
@@ -373,7 +373,7 @@ borrowBtn.addEventListener('click', ()=>{
   pool.borrows += borrow;
   const pos = {t, units, debt: borrow, ts: Date.now()};
   positions.push(pos);
-  logEvent('Borrow opened', `xNGX-${t}`, borrow, 'USDC‑H');
+  logEvent('Borrow opened', `xNGX-${t}`, borrow, 'USDC');
   renderPositions(); unitsInp.value = ''; amtInp.value = ''; recompute(); updateOverviews(); renderHistory();
   alert('Loan opened. Origination fee '+fmtUSD(borrow*ORIG_FEE)+' will be deducted on settlement.');
 });
@@ -397,10 +397,10 @@ $('#repayBtn').onclick=()=>{
   if(selectedIndex<0) return; const p = positions[selectedIndex];
   openModal('Repay debt', `<div>Position: <b>${p.t}</b></div>
     <div>Outstanding: <b>${fmtUSD(p.debt)}</b></div>
-    <div><label>Amount (USDC‑H)</label><input id='repayAmt' type='number' min='0' step='0.01' placeholder='e.g. 250' /></div>`, ()=>{
+    <div><label>Amount (USDC)</label><input id='repayAmt' type='number' min='0' step='0.01' placeholder='e.g. 250' /></div>`, ()=>{
       const a = Number($('#repayAmt').value||0); if(!a) return;
       p.debt = Math.max(0, p.debt - a); pool.borrows = Math.max(0, pool.borrows - a);
-      logEvent('Repay', `xNGX-${p.t}`, a, 'USDC‑H');
+      logEvent('Repay', `xNGX-${p.t}`, a, 'USDC');
       if(p.debt===0){ positions.splice(selectedIndex,1); selectedIndex=-1; $('#repayBtn').disabled=true; $('#closeBtn').disabled=true; }
       renderPositions(); updateOverviews(); renderHistory(); closeModal();
   });
@@ -410,7 +410,7 @@ $('#closeBtn').onclick=()=>{
   if(selectedIndex<0) return; const p = positions[selectedIndex];
   openModal('Close loan', `<div>Repay full debt <b>${fmtUSD(p.debt)}</b> and unlock <b>${p.units}</b> units of xNGX-${p.t}?</div>`, ()=>{
     pool.borrows = Math.max(0, pool.borrows - p.debt);
-    logEvent('Close loan', `xNGX-${p.t}`, p.debt, 'USDC‑H');
+    logEvent('Close loan', `xNGX-${p.t}`, p.debt, 'USDC');
     positions.splice(selectedIndex,1); selectedIndex=-1; renderPositions(); $('#repayBtn').disabled=true; $('#closeBtn').disabled=true; updateOverviews(); renderHistory(); closeModal();
   });
 };
@@ -420,7 +420,7 @@ function renderSupply(){
   if(supplyPos.amount<=0){ supBody.innerHTML = '<tr><td colspan="5" class="muted">Nothing supplied yet</td></tr>'; return; }
   supBody.innerHTML = '';
   const tr = document.createElement('tr');
-  tr.innerHTML = `<td>USDC‑H</td><td>$${supplyPos.amount.toFixed(2)}</td><td id='accCell'>$${supplyPos.accrued.toFixed(4)}</td><td>${(DEPOSIT_APY*100).toFixed(1)}%</td><td class='right'>
+  tr.innerHTML = `<td>USDC</td><td>$${supplyPos.amount.toFixed(2)}</td><td id='accCell'>$${supplyPos.accrued.toFixed(4)}</td><td>${(DEPOSIT_APY*100).toFixed(1)}%</td><td class='right'>
     <div class="action">
       <button class="btn secondary dots" title="Actions">⋯</button>
       <div class="menu"><button class="mClaim">Claim rewards</button><button class="mWithdraw">Withdraw</button></div>
@@ -439,22 +439,22 @@ supplyBtn.onclick=()=>{
   const a = Number(supplyAmtInp.value||0); if(!a) return; supplyAmtInp.value='';
   supplyPos.amount += a; supplyPos.ts = Date.now();
   pool.supply += a; updatePoolKPIs(); renderSupply(); updateOverviews();
-  logEvent('Supply', 'USDC‑H pool', a, 'USDC‑H'); renderHistory();
+  logEvent('Supply', 'USDC pool', a, 'USDC'); renderHistory();
   alert('Supplied to pool. Rewards start accruing immediately.');
 };
 
 function claimRewards(){
   if(supplyPos.accrued<=0) return; const amt = supplyPos.accrued; supplyPos.accrued = 0; renderSupply(); updateOverviews();
-  logEvent('Claim rewards', 'USDC‑H pool', amt, 'USDC‑H'); renderHistory();
-  openModal('Claim rewards', `<div>You will claim <b>${fmtUSD(amt)}</b> in USDC‑H to your wallet.</div>`, ()=>{ closeModal(); });
+  logEvent('Claim rewards', 'USDC pool', amt, 'USDC'); renderHistory();
+  openModal('Claim rewards', `<div>You will claim <b>${fmtUSD(amt)}</b> in USDC to your wallet.</div>`, ()=>{ closeModal(); });
 }
 
 function withdrawFlow(){
   openModal('Withdraw supplied', `<div>Available to withdraw: <b>${fmtUSD(supplyPos.amount)}</b></div>
-    <div><label>Amount (USDC‑H)</label><input id='wdAmt' type='number' min='0' step='0.01' placeholder='e.g. 1000'/></div>`, ()=>{
+    <div><label>Amount (USDC)</label><input id='wdAmt' type='number' min='0' step='0.01' placeholder='e.g. 1000'/></div>`, ()=>{
       const a = Number($('#wdAmt').value||0); if(!a) return;
       supplyPos.amount = Math.max(0, supplyPos.amount - a); pool.supply = Math.max(0, pool.supply - a);
-      logEvent('Withdraw', 'USDC‑H pool', a, 'USDC‑H');
+      logEvent('Withdraw', 'USDC pool', a, 'USDC');
       renderSupply(); updatePoolKPIs(); updateOverviews(); renderHistory(); closeModal();
   });
 }
@@ -464,7 +464,7 @@ let lastTick = Date.now();
 setInterval(()=>{
   const now = Date.now(); const dt = (now - lastTick)/1000; lastTick = now;
   if(supplyPos.amount>0){
-    const yearly = supplyPos.amount * DEPOSIT_APY; // USDC‑H per year
+    const yearly = supplyPos.amount * DEPOSIT_APY; // USDC per year
     const perSecond = yearly / (365*24*3600);
     supplyPos.accrued += perSecond * dt * 6; // speed up
     const cell = document.getElementById('accCell'); if(cell) cell.textContent = `$${supplyPos.accrued.toFixed(4)}`;

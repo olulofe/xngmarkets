@@ -117,10 +117,10 @@
     <!-- SUPPLY -->
     <div id="supplyView" class="grid">
       <div>
-        <div id="supplyToast" class="toast">✅ Supplied <strong id="lastSup"></strong> USDC‑H. Rewards now accruing in real time.</div>
+        <div id="supplyToast" class="toast">✅ Supplied <strong id="lastSup"></strong> USDC. Rewards now accruing in real time.</div>
         <div class="card">
-          <h3>Supply USDC‑H</h3>
-          <div class="row"><label>Amount (USDC‑H)</label><input id="supplyAmt" type="number" min="0" step="0.01" placeholder="e.g. 5,000"/></div>
+          <h3>Supply USDC</h3>
+          <div class="row"><label>Amount (USDC)</label><input id="supplyAmt" type="number" min="0" step="0.01" placeholder="e.g. 5,000"/></div>
           <div class="kpi">
             <div class="k"><div class="l">Deposit APY</div><div class="v" id="kapy">—</div><div class="muted">Variable, floats with utilization</div></div>
             <div class="k"><div class="l">Fee</div><div class="v">0%</div><div class="muted">No supply fee</div></div>
@@ -134,8 +134,8 @@
       <div class="card">
         <h3>Pool overview</h3>
         <div class="kpi">
-          <div class="k"><div class="l">Total supply</div><div class="v" id="poolSup">—</div><div class="muted">USDC‑H</div></div>
-          <div class="k"><div class="l">Total borrows</div><div class="v" id="poolBor">—</div><div class="muted">USDC‑H</div></div>
+          <div class="k"><div class="l">Total supply</div><div class="v" id="poolSup">—</div><div class="muted">USDC</div></div>
+          <div class="k"><div class="l">Total borrows</div><div class="v" id="poolBor">—</div><div class="muted">USDC</div></div>
           <div class="k"><div class="l">Utilization</div><div class="v" id="poolUtil">—</div><div class="muted">Borrowed / Supplied</div></div>
           <div class="k"><div class="l">Borrow APR</div><div class="v" id="borAPR">—</div><div class="muted">For borrowers</div></div>
         </div>
@@ -158,7 +158,7 @@
         </div>
         <div class="card">
           <h3>Withdraw</h3>
-          <div class="row"><label>Amount (USDC‑H)</label><input id="wdAmt" type="number" min="0" step="0.01" placeholder="e.g. 1,000"/></div>
+          <div class="row"><label>Amount (USDC)</label><input id="wdAmt" type="number" min="0" step="0.01" placeholder="e.g. 1,000"/></div>
           <div class="two" style="margin-top:12px">
             <button id="wdBtn" class="btn">Withdraw</button>
             <button id="wdAll" class="btn secondary">Withdraw all</button>
@@ -180,7 +180,7 @@
 
 <script>
 // ===== Simplified pool economics (demo) =====
-let pool = { supply: 250000, borrows: 105000 }; // USDC‑H
+let pool = { supply: 250000, borrows: 105000 }; // USDC
 const BORROW_APR = 0.085; // 8.5% headline
 const REVENUE_SHARE = 0.85; // 85% of borrow interest paid to suppliers
 
@@ -226,7 +226,7 @@ function updateUI(){
   else{
     const apy = (depositAPR()*100).toFixed(1)+'%';
     tb.innerHTML = `<tr>
-      <td>USDC‑H</td>
+      <td>USDC</td>
       <td>${fmt(supplier.amount)}</td>
       <td>${apy}</td>
       <td>${fmt(supplier.claimable)}</td>
@@ -257,7 +257,7 @@ function claimRewards(){
   accrue();
   if(supplier.claimable<=0) return alert('Nothing to claim yet.');
   const amt = supplier.claimable; supplier.claimable = 0; supplier.lastClaim = Date.now();
-  alert('Claimed '+fmt(amt)+' to your USDC‑H balance.');
+  alert('Claimed '+fmt(amt)+' to your USDC balance.');
   updateUI();
 }
 $('#claimBtn').onclick=claimRewards;
@@ -265,7 +265,7 @@ $('#maxClaim').onclick=()=>{ accrue(); const c = supplier.claimable; supplier.cl
 
 $('#wdBtn').onclick=()=>{
   const a = Number($('#wdAmt').value||0); if(!a) return; if(a>supplier.amount) return alert('Cannot withdraw more than supplied.');
-  accrue(); supplier.amount -= a; pool.supply -= a; $('#wdAmt').value=''; updatePoolKPIs(); updateUI(); alert('Withdrew '+fmt(a)+' USDC‑H.');
+  accrue(); supplier.amount -= a; pool.supply -= a; $('#wdAmt').value=''; updatePoolKPIs(); updateUI(); alert('Withdrew '+fmt(a)+' USDC.');
 };
 $('#wdAll').onclick=()=>{ accrue(); if(supplier.amount<=0) return; const a = supplier.amount; supplier.amount=0; pool.supply-=a; updatePoolKPIs(); updateUI(); alert('Withdrew all '+fmt(a)+'.'); };
 

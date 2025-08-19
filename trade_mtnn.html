@@ -144,7 +144,7 @@
           <div>
             <div class="small">iNAV (NGN)</div>
             <div style="font-size:28px;font-weight:800;">₦<span id="iNAV">282.45</span></div>
-            <div class="small">≈ <span id="iNAVusd">0.1765</span> USDC‑H @ ₦<span id="fx">1600</span>/$</div>
+            <div class="small">≈ <span id="iNAVusd">0.1765</span> USDC @ ₦<span id="fx">1600</span>/$</div>
           </div>
           <div>
             <div class="small">Band Oracle</div>
@@ -183,7 +183,7 @@
         </div>
         <div class="tab-pane" data-pane="profile" style="display:none;">MTN Nigeria: telecoms; HQ Lagos; FY Dec.</div>
         <div class="tab-pane" data-pane="news" style="display:none;">News feed placeholder…</div>
-        <div class="tab-pane" data-pane="dividends" style="display:none;">Dividend badge ★★★★☆; T+1 USDC‑H payouts.</div>
+        <div class="tab-pane" data-pane="dividends" style="display:none;">Dividend badge ★★★★☆; T+1 USDC payouts.</div>
       </div>
     </div>
 
@@ -217,7 +217,7 @@
                 <div class="card-body" style="padding:10px 12px;">
                   <div class="line"><span>Est. price</span> <span class="mono">₦<span id="mbPrice">283.60</span></span></div>
                   <div class="line"><span>Within band?</span> <span id="mbBand" class="ok">Yes</span></div>
-                  <div class="line"><span>Fees</span> <span class="mono">0.20% (USDC‑H)</span></div>
+                  <div class="line"><span>Fees</span> <span class="mono">0.20% (USDC)</span></div>
                 </div>
               </div>
               <button id="buyNow" class="btn btn-primary" style="width:100%;margin-top:12px;font-weight:700;">Buy Now</button>
@@ -283,9 +283,9 @@
             <!-- Primary Burn -->
             <div id="burnForm" style="display:none;">
               <div class="small" style="background:#fefce8;border:1px dashed #fde68a;padding:10px 12px;border-radius:10px;">If market is closed your burn request is queued; cancel allowed before cut‑off.</div>
-              <div class="small" style="margin-top:8px;">Units to burn (sell underlying and receive USDC‑H)</div>
+              <div class="small" style="margin-top:8px;">Units to burn (sell underlying and receive USDC)</div>
               <input id="burnUnits" class="input" placeholder="e.g., 200"/>
-              <div class="small" style="margin-top:6px;">Tokens move to escrow; broker sells on NGX at the next window and we remit USDC‑H net of fees.</div>
+              <div class="small" style="margin-top:6px;">Tokens move to escrow; broker sells on NGX at the next window and we remit USDC net of fees.</div>
               <button id="redeemBtn" class="btn btn-primary" style="width:100%;margin-top:12px;">Submit Burn for USDC-H</button>
             </div>
 </div>
@@ -341,7 +341,7 @@
 
     <!-- Website‑style disclaimer -->
     <div class="small" style="margin-top:16px;line-height:1.7">
-      <strong>Important Information</strong> — xNGX.markets provides a digital interface to trade on‑chain tokens that represent interests in NGX‑listed equities held by a regulated broker through a dedicated SPV. These tokens are on‑chain claims on underlying assets and are not themselves shares. Prices shown (including iNAV and band) are indicative; execution prices may differ. Trading involves risk, including possible loss of capital. Primary mint and redemption windows are subject to market hours, broker cut‑offs, liquidity conditions, oracle health, and compliance checks. Corporate actions and regulatory changes may affect token availability and settlement timelines. Dividend distributions, where applicable, are credited in USDC‑H after issuer payment and any required withholding. Nothing on this site constitutes investment advice, an offer, or a solicitation to buy or sell securities. Users should ensure they meet all applicable eligibility and KYC/AML requirements and review the full Terms & Disclosures before transacting.
+      <strong>Important Information</strong> — xNGX.markets provides a digital interface to trade on‑chain tokens that represent interests in NGX‑listed equities held by a regulated broker through a dedicated SPV. These tokens are on‑chain claims on underlying assets and are not themselves shares. Prices shown (including iNAV and band) are indicative; execution prices may differ. Trading involves risk, including possible loss of capital. Primary mint and redemption windows are subject to market hours, broker cut‑offs, liquidity conditions, oracle health, and compliance checks. Corporate actions and regulatory changes may affect token availability and settlement timelines. Dividend distributions, where applicable, are credited in USDC after issuer payment and any required withholding. Nothing on this site constitutes investment advice, an offer, or a solicitation to buy or sell securities. Users should ensure they meet all applicable eligibility and KYC/AML requirements and review the full Terms & Disclosures before transacting.
     </div>
   </div>
 
@@ -376,7 +376,7 @@
 let bandPct = 0.0105; // ±1.05%
 let safety = 0.0010;  // 0.10%
 let iNAV = 282.45;    // ₦
-let fx = 1600;        // ₦/USDC‑H
+let fx = 1600;        // ₦/USDC
 let bestAsk = 283.60, bestBid = 281.80;
 
 const qs  = (sel) => document.querySelector(sel);
