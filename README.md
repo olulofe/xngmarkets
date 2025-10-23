@@ -70,3 +70,12 @@ mongodbURI =
 OPERATOR_ID = 
 OPERATOR_KEY = 
 ```
+
+### Steps
+
+* Get MOCK USDC from https://hedera-usdc-faucet.vercel.app/
+* Visit https://xng.markets
+* Place a Buy limit order for any tokenized stock
+* Provide Liquidity for Lending
+* Place a Sell limit order (If your buy limit order was fulfilled)
+* Use your tokenized stock to get USDC backed loan
