@@ -1,0 +1,38 @@
+# xNG
+
+
+## Smart Contract Layout
+```
+contracts/
+  ├─ Clob.sol                      # Minimal Central Limit Order Book (CLOB) w/ band guards + fixed notional math
+  ├─ DirectSettleAdapter.sol       # Non‑custodial adapter; only transferFrom - Stateless
+  └─ interfaces/
+       ├─ IOracleHub.sol           # Oracle interface (getBand / maxStaleness)
+       └─ IMoveAdapter.sol         # Adapter interface (move)
+```
+
+OracleHub, DirectSettleAdapter, Clob and BorrowSupplyV1 contracts
+
+```
+xNGX-MTNN -> tokenId=0.0.6807185 evm=000000000000000000000000000000000067de91
+xNGX-UBA -> tokenId=0.0.6807187 evm=000000000000000000000000000000000067de93
+xNGX-GTCO -> tokenId=0.0.6807188 evm=000000000000000000000000000000000067de94
+xNGX-ZENITHBANK -> tokenId=0.0.6807189 evm=000000000000000000000000000000000067de95
+xNGX-ARADEL -> tokenId=0.0.6807190 evm=000000000000000000000000000000000067de96
+xNGX-TOTALNG -> tokenId=0.0.6807191 evm=000000000000000000000000000000000067de97
+xNGX-AIICO -> tokenId=0.0.6807192 evm=000000000000000000000000000000000067de98
+xNGX-CORNERST -> tokenId=0.0.6807193 evm=000000000000000000000000000000000067de99
+xNGX-OKOMUOIL -> tokenId=0.0.6807194 evm=000000000000000000000000000000000067de9a
+xNGX-PRESCO -> tokenId=0.0.6807195 evm=000000000000000000000000000000000067de9b
+xNGX-NESTLE -> tokenId=0.0.6807196 evm=000000000000000000000000000000000067de9c
+xNGX-DANGSUGAR -> tokenId=0.0.6807197 evm=000000000000000000000000000000000067de9d
+xNGX-NGN -> tokenId=0.0.6954636 evm=00000000000000000000000000000000006a1e8c
+```
+
+```
+OracleHub(verified) -> ContractId=0.0.6809934 evm=0xc51076c08596D3007DC4673bb8E64BAc2B2eBd19
+USDC xNG -> tokenId=0.0.6808751 evm=000000000000000000000000000000000067e4af
+DirectSettleAdapter(verified)  -> ContractId=0.0.6837050 evm=0x3698517eFDB3153f398fD33f86026B7c47cF9eFe
+Clob(verified)  -> ContractId=0.0.6955617 evm=0x7ad55622F26EEEdeb312f4b135F7076DFb1938Bd
+BorrowSupply(verified) -> ContractId=0.0.6955987 evm=0x461D8b986d3B1e3559d22155872eb0815355644b
+```
