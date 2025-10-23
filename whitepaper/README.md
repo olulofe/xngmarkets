@@ -1,7 +1,3 @@
-Here’s a full, legally aligned and publication-ready **xNG.markets Whitepaper (Final Draft)** — rewritten to incorporate your **latest deck**, **legal opinion from Freesia Solicitors**, and **updated architecture design**.
-It’s formatted in **clean Markdown**, ready to copy or publish on your site or GitBook.
-
----
 
 # **xNG.markets — Whitepaper (Final Draft)**
 
