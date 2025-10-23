@@ -1,5 +1,15 @@
 # xNG Markets
 
+## Repository Layout
+
+```
+xngmarkets
+  ├─ contracts                      # Contracts and deployment scripts (HTS, HSCS)
+  ├─ app                            # Nextjs Dapp hosted on Vercel
+  └─ oracle-cron                    # Cron job to fetch off-chain stock price and update price Oracle Contracts on Hedera (Every 3 mins)
+  └─ whitepaper                     # xNG Market Whitepaper
+```
+
 ## Track
 
 Onchain Finance & Real-World Assets (RWA)
@@ -25,4 +35,38 @@ Used by the frontend to stream live updates for trades, portfolio data, and orac
 | DirectSettleAdapter.sol | [0.0.6955987](https://hashscan.io/testnet/contract/0.0.6955987)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | BorrowSupply.sol        | [0.0.6837722](https://hashscan.io/testnet/contract/0.0.6837722)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | MockUSDC.sol            | [0.0.6808751](https://hashscan.io/testnet/contract/0.0.6808751)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+## Architecture Diagram
 
+<img width="1141" height="685" alt="Screenshot 2025-10-14 at 5 32 16 pm" src="https://github.com/user-attachments/assets/50ade4ce-0c73-49f9-ac15-2b6a5f76b1af" />
+
+## Setup
+
+### Requirements
+* Node JavaScript runtime environment >= v18 installed
+* Linux or Mac OS
+* solc, solidity compiler 0.8.0 minimum
+
+### Installation
+
+* Clone repository
+* cd `app`
+* Copy `.env.example` to `.env` (See below)
+* Run `npm install`
+* Run `npm run dev`
+
+```env
+NEXT_PUBLIC_PROJECT_ID = 
+NEXT_PUBLIC_EXPLORER = 
+NEXT_PUBLIC_CHAIN_ID = 
+NEXT_PUBLIC_RPC_URL = 
+
+NEXT_PUBLIC_ORACLE_HUB_CONTRACT = 
+NEXT_PUBLIC_USDC_XNG_CONTRACT = 
+NEXT_PUBLIC_DIRECT_SETTLE_ADAPTER_CONTRACT = 
+NEXT_PUBLIC_CLOB_CONTRACT = 
+NEXT_PUBLIC_BORROW_SUPPLY_CONTRACT = 
+
+mongodbURI =
+OPERATOR_ID = 
+OPERATOR_KEY = 
+```
