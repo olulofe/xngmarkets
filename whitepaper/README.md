@@ -109,7 +109,7 @@ Issuer → Broker → Protocol → Token Holders (paid in USDC-H).
 → Mirror Node (real-time transparency)
 → Fireblocks SDK + Custodian Wallets
 
-*(Illustrated in the updated “xNG Architecture Diagram” version.)*
+<img width="1600" height="961" alt="xng-arch" src="https://github.com/user-attachments/assets/b1487ecd-7aa0-456a-afa8-7649d70e7a8d" />
 
 ---
 
