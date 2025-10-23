@@ -37,7 +37,7 @@ Used by the frontend to stream live updates for trades, portfolio data, and orac
 | MockUSDC.sol            | [0.0.6808751](https://hashscan.io/testnet/contract/0.0.6808751)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 ## Architecture Diagram
 
-<img width="1141" height="685" alt="Screenshot 2025-10-14 at 5 32 16 pm" src="https://github.com/user-attachments/assets/50ade4ce-0c73-49f9-ac15-2b6a5f76b1af" />
+<img  alt="Screenshot 2025-10-14 at 5 32 16 pm" src="https://github.com/user-attachments/assets/50ade4ce-0c73-49f9-ac15-2b6a5f76b1af" />
 
 ## Setup
 
