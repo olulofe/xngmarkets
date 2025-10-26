@@ -25,6 +25,14 @@ Publishes price data and oracle updates, ensuring transparent off-chain data fee
 4. **Hedera Mirror Node**
 Used by the frontend to stream live updates for trades, portfolio data, and oracle price bands.
 
+## Hedera Transaction Types
+
+- TokenMintTransaction
+- TransferTransaction
+- ContractExecuteTransaction
+- TokenCreateTransaction
+- ContractCallQuery
+
 ## Deployed Contracts (Hedera Testnet)
 
 | Contract                | Explorer Link                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
