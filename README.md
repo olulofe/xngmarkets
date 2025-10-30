@@ -14,6 +14,14 @@ xngmarkets
 
 Onchain Finance & Real-World Assets (RWA)
 
+## Pitch Deck
+
+https://drive.google.com/file/d/1Txpz_6C2cqii5KgG2SLf4GviYi6H2XJ9/view?usp=sharing
+
+## Hedera Certification Link
+
+https://drive.google.com/file/d/1PgTy6o4DdmVxgs3CDG8km5NMD8xEfxCZ/view?usp=drivesdk
+
 ## Hedera Services Used
 
 1. **Hedera Token Service (HTS)**
