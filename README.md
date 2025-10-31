@@ -16,11 +16,11 @@ Onchain Finance & Real-World Assets (RWA)
 
 ## Pitch Deck
 
-https://drive.google.com/file/d/1Txpz_6C2cqii5KgG2SLf4GviYi6H2XJ9/view?usp=sharing
+[https://drive.google.com/file/d/1Txpz_6C2cqii5KgG2SLf4GviYi6H2XJ9/view](https://drive.google.com/file/d/1p8O-3u5S4UbTnim_ewRlGgOWXUVtHbdH/view)
 
 ## Hedera Certification Link
 
-https://drive.google.com/file/d/1PgTy6o4DdmVxgs3CDG8km5NMD8xEfxCZ/view?usp=drivesdk
+https://drive.google.com/file/d/1PgTy6o4DdmVxgs3CDG8km5NMD8xEfxCZ/view
 
 ## Hedera Services Used
 
